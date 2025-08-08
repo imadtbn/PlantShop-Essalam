@@ -205,23 +205,25 @@
             background-color: var(--dark-color);
         }
         .search-container {
+            width: 500px;
             margin: 15px auto;
-            max-width: 500px;
             display: flex;
         }
         .search-container input {
-            padding: 10px 15px;
+            padding: 12px 20px;
             border: 1px solid #ddd;
             border-radius: 4px 0 0 4px;
             width: 100%;
+            font-size: 16px;
         }
         .search-container button {
             background-color: var(--dark-color);
             color: white;
             border: none;
-            padding: 0 15px;
+            padding: 0 20px;
             border-radius: 0 4px 4px 0;
             cursor: pointer;
+            font-size: 16px;
         }
         .search-container button:hover {
             background-color: var(--primary-color);
@@ -254,63 +256,69 @@
             background-color: #1565c0;
         }
         
-        /* تحسينات للهواتف المحمولة */
-        @media (max-width: 768px) {
-            nav ul {
-                flex-direction: column;
-                align-items: center;
-            }
-            nav li {
-                margin: 5px 0;
-            }
-            .form-row {
-                flex-direction: column;
-                gap: 0;
-            }
-            .products {
-                grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-            }
-            .tabs {
-                padding-bottom: 5px;
-            }
-            .tab {
-                padding: 8px 15px;
-                font-size: 14px;
-            }
-            .product img {
-                height: 150px;
-            }
-            .search-container {
-                margin: 10px auto;
-            }
-            .container {
-                padding: 10px;
-            }
-            .category {
-                padding: 10px;
-            }
+        /* سلة المشتريات */
+        .cart-container {
+            position: relative;
+            display: inline-block;
         }
-        
-        @media (max-width: 480px) {
-            .products {
-                grid-template-columns: 1fr;
-            }
-            header h1 {
-                font-size: 24px;
-            }
-            header p {
-                font-size: 14px;
-            }
-            .search-container input {
-                padding: 8px 12px;
-            }
-            .product-info h3 {
-                font-size: 18px;
-            }
-            .price {
-                font-size: 16px;
-            }
+
+        #cartDropdown {
+            display: none;
+            position: absolute;
+            top: 100%;
+            left: 0;
+            width: 350px;
+            max-height: 500px;
+            overflow-y: auto;
+            background-color: white;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+            border-radius: 8px;
+            padding: 15px;
+            z-index: 1000;
         }
+
+        .cart-container:hover #cartDropdown {
+            display: block;
+        }
+
+        .cart-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .cart-item-details {
+            flex: 1;
+        }
+
+        .cart-item-actions {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .cart-item-actions input {
+            width: 50px;
+            text-align: center;
+        }
+
+        .remove-item {
+            color: #f44336;
+            cursor: pointer;
+        }
+
+        .cart-summary {
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 2px solid var(--light-color);
+        }
+
+        .checkout-btn {
+            width: 100%;
+            margin-top: 10px;
+        }
+
         .order-items {
             margin: 20px 0;
             border: 1px solid #ddd;
@@ -338,12 +346,6 @@
             border-bottom: none;
         }
         
-        .remove-item {
-            color: #f44336;
-            cursor: pointer;
-            font-size: 18px;
-        }
-        
         .order-summary {
             background-color: var(--light-color);
             padding: 15px;
@@ -365,45 +367,97 @@
             margin-top: 10px;
         }
         
-        .delivery-options {
+        /* نافذة اختيار الأصناف */
+        #varietyModal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
             display: flex;
-            gap: 15px;
-            margin: 15px 0;
+            justify-content: center;
+            align-items: center;
+            z-index: 10000;
         }
         
-        .delivery-option {
-            flex: 1;
-            border: 1px solid #ddd;
-            padding: 15px;
+        #varietyModal > div {
+            background: white;
+            padding: 20px;
             border-radius: 8px;
-            cursor: pointer;
-            transition: all 0.3s;
+            width: 300px;
         }
         
-        .delivery-option.selected {
-            border-color: var(--primary-color);
-            background-color: rgba(46, 125, 50, 0.1);
-        }
-        
-        .delivery-option input {
-            display: none;
-        }
-        
-        .additional-info textarea {
-            min-height: 100px;
-        }
-        
+        /* تحسينات للهواتف المحمولة */
         @media (max-width: 768px) {
+            nav ul {
+                flex-direction: column;
+                align-items: center;
+            }
+            nav li {
+                margin: 5px 0;
+            }
+            .form-row {
+                flex-direction: column;
+                gap: 0;
+            }
+            .products {
+                grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            }
+            .tabs {
+                padding-bottom: 5px;
+            }
+            .tab {
+                padding: 8px 15px;
+                font-size: 14px;
+            }
+            .product img {
+                height: 150px;
+            }
+            .search-container {
+                width: 100%;
+                max-width: 300px;
+                margin: 10px auto;
+            }
+            .container {
+                padding: 10px;
+            }
+            .category {
+                padding: 10px;
+            }
+            
             .order-items th, .order-items td {
                 padding: 8px 10px;
                 font-size: 14px;
             }
             
-            .delivery-options {
-                flex-direction: column;
+            #cartDropdown {
+                width: 280px;
+                right: 0;
+                left: auto;
             }
         }
-    </style>
+        
+        @media (max-width: 480px) {
+            .products {
+                grid-template-columns: 1fr;
+            }
+            header h1 {
+                font-size: 24px;
+            }
+            header p {
+                font-size: 14px;
+            }
+            .search-container input {
+                padding: 10px 15px;
+            }
+            .product-info h3 {
+                font-size: 18px;
+            }
+            .price {
+                font-size: 16px;
+            }
+        }
     </style>
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
@@ -412,9 +466,33 @@
     <header>
         <h1>مشتلة السلام</h1>
         <p>أجود أنواع شتلات الفواكه والخضروات، ورود - نبتات وأشجار تزيين الحدائق</p>
-        <div class="search-container">
-            <input type="text" id="searchInput" placeholder="ابحث عن منتج...">
-            <button onclick="searchProducts()"><i class="fas fa-search"></i></button>
+        <div style="display: flex; justify-content: center; align-items: center; gap: 15px; flex-wrap: wrap;">
+            <div class="search-container">
+                <input type="text" id="searchInput" placeholder="ابحث عن منتج...">
+                <button onclick="searchProducts()"><i class="fas fa-search"></i></button>
+            </div>
+            
+            <div class="cart-container">
+                <button onclick="showFullCart()" style="background-color: var(--dark-color); padding: 10px 15px; border-radius: 4px; color: white; border: none; cursor: pointer;">
+                    <i class="fas fa-shopping-cart"></i> سلة المشتريات
+                    <span id="cartCount" style="background-color: var(--primary-color); padding: 2px 6px; border-radius: 50%; font-size: 12px;">0</span>
+                </button>
+                
+                <div id="cartDropdown">
+                    <h4 style="margin-top: 0; border-bottom: 2px solid var(--light-color); padding-bottom: 10px;">سلة المشتريات</h4>
+                    <div id="dropdownCartItems">
+                        <p style="text-align: center; color: #666;">السلة فارغة</p>
+                    </div>
+                    
+                    <div class="cart-summary">
+                        <div style="display: flex; justify-content: space-between;">
+                            <strong>المجموع:</strong>
+                            <span id="dropdownSubtotal">0 د ج</span>
+                        </div>
+                        <button class="checkout-btn" onclick="showFullCart()">إتمام الشراء</button>
+                    </div>
+                </div>
+            </div>
         </div>
     </header>
 
@@ -444,258 +522,258 @@
             <div class="tab" onclick="openTab(event, 'vines')">الكروم</div>
           </div>
       
-<!-- محتوى الزيتون -->
-<div id="olive" class="tab-content active">
-    <div class="products">
-      <div class="product">
-        <img src="https://quran-m.com/wp-content/uploads/2019/12/images-10-2.jpg" alt="زيتون زيت">
-        <div class="product-info">
-          <h3>زيتون لإنتاج الزيت</h3>
-          <p>صنف ممتاز للإنتاج الزيوت</p>
-          <div class="varieties">
-            <strong>الأصناف المتاحة:</strong>
-            <ul>
-              <li>شملال - 60 د ج</li>
-              <li>سيقواز - 65 د ج</li>
-              <li>بيكوال - 70 د ج</li>
-              <li>ملكة العرب - 75 د ج</li>
-            </ul>
+          <!-- محتوى الزيتون -->
+          <div id="olive" class="tab-content active">
+            <div class="products">
+              <div class="product">
+                <img src="https://quran-m.com/wp-content/uploads/2019/12/images-10-2.jpg" alt="زيتون زيت">
+                <div class="product-info">
+                  <h3>زيتون لإنتاج الزيت</h3>
+                  <p>صنف ممتاز للإنتاج الزيوت</p>
+                  <div class="varieties">
+                    <strong>الأصناف المتاحة:</strong>
+                    <ul>
+                      <li>شملال - 60 د ج</li>
+                      <li>سيقواز - 65 د ج</li>
+                      <li>بيكوال - 70 د ج</li>
+                      <li>ملكة العرب - 75 د ج</li>
+                    </ul>
+                  </div>
+                  <div class="price">تبدأ الأسعار من: 60 د ج</div>
+                  <button class="cart-btn" onclick="showVarietySelection('زيتون لإنتاج الزيت', this)"><i class="fas fa-cart-plus"></i> أضف للسلة</button>
+                </div>
+              </div>
+          
+              <div class="product">
+                <img src="https://www.emaratalyoum.com/polopoly_fs/1.952506.1481449569!/image/image.jpg" alt="زيتون للإنتاج الزيت والتريقد">
+                <div class="product-info">
+                  <h3>زيتون للإنتاج الزيت والتريقد</h3>
+                  <p>من أفضل الأصناف الترقيد</p>
+                  <div class="varieties">
+                    <strong>الأصناف المتاحة:</strong>
+                    <ul>
+                      <li>فركاني - 55 د ج</li>
+                      <li>البيكوال - 60 د ج</li>
+                    </ul>
+                  </div>
+                  <div class="price">تبدأ الأسعار من: 55 د ج</div>
+                  <button class="cart-btn" onclick="showVarietySelection('زيتون للإنتاج الزيت والتريقد', this)"><i class="fas fa-cart-plus"></i> أضف للسلة</button>
+                </div>
+              </div>
+          
+              <div class="product">
+                <img src="https://www.sarahanews.net/wp-content/uploads/2024/10/1000341277.jpg" alt="زيتون التخليل والترقيد">
+                <div class="product-info">
+                  <h3>زيتون التخليل والترقيد</h3>
+                  <p>صنف مميز للزيت والتخليل</p>
+                  <div class="varieties">
+                    <strong>الأصناف المتاحة:</strong>
+                    <ul>
+                      <li>فركاني - 65 د ج</li>
+                      <li>البيكوال - 70 د ج</li>
+                      <li>شملال - 75 د ج</li>
+                    </ul>
+                  </div>
+                  <div class="price">تبدأ الأسعار من: 65 د ج</div>
+                  <button class="cart-btn" onclick="showVarietySelection('زيتون التخليل والترقيد', this)"><i class="fas fa-cart-plus"></i> أضف للسلة</button>
+                </div>
+              </div>
+            </div>
           </div>
-          <div class="price">تبدأ الأسعار من: 60 د ج</div>
-          <button class="cart-btn" onclick="showOrderForm('زيتون الزيت', 60)"><i class="fas fa-cart-plus"></i> أضف للسلة</button>
-        </div>
-      </div>
-  
-      <div class="product">
-        <img src="https://www.emaratalyoum.com/polopoly_fs/1.952506.1481449569!/image/image.jpg" alt="زيتون للإنتاج الزيت والتريقد">
-        <div class="product-info">
-          <h3>زيتون للإنتاج الزيت والتريقد</h3>
-          <p>من أفضل الأصناف الترقيد</p>
-          <div class="varieties">
-            <strong>الأصناف المتاحة:</strong>
-            <ul>
-              <li>فركاني - 55 د ج</li>
-              <li>البيكوال - 60 د ج</li>
-            </ul>
+          
+          <!-- محتوى الحمضيات -->
+          <div id="citrus" class="tab-content">
+            <div class="products">
+              <div class="product">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/b0/OrangeBloss_wb.jpg/330px-OrangeBloss_wb.jpg" alt="برتقال">
+                <div class="product-info">
+                  <h3>برتقال</h3>
+                  <p>صنف حلو المذاق</p>
+                  <div class="varieties">
+                    <strong>الأصناف المتاحة:</strong>
+                    <ul>
+                      <li>طامسون - 45 د ج</li>
+                      <li>بالنسي - 50 د ج</li>
+                    </ul>
+                  </div>
+                  <div class="price">تبدأ الأسعار من: 45 د ج</div>
+                  <button class="cart-btn" onclick="showVarietySelection('برتقال', this)"><i class="fas fa-cart-plus"></i> أضف للسلة</button>
+                </div>
+              </div>
+          
+              <div class="product">
+                <img src="https://www.mshtly.com/uploads/products/Citrus-aurantiifolia-10.jpeg" alt="ليمون">
+                <div class="product-info">
+                  <h3>ليمون</h3>
+                  <p>ليمون حمضي عالي الجودة</p>
+                  <div class="varieties">
+                    <strong>الأصناف المتاحة:</strong>
+                    <ul>
+                      <li>بنزهير - 50 د ج</li>
+                      <li>04 فصول - 55 د ج</li>
+                      <li>ليمون أصفر - 60 د ج</li>
+                    </ul>
+                  </div>
+                  <div class="price">تبدأ الأسعار من: 50 د ج</div>
+                  <button class="cart-btn" onclick="showVarietySelection('ليمون', this)"><i class="fas fa-cart-plus"></i> أضف للسلة</button>
+                </div>
+              </div>
+          
+              <div class="product">
+                <img src="https://sarayoman.com/wp-content/uploads/2020/11/mandarine2.jpg" alt="مندرين">
+                <div class="product-info">
+                  <h3>المندرين</h3>
+                  <p>فاكهة لذيذة سهلة التقشير</p>
+                  <div class="varieties">
+                    <strong>الأصناف المتاحة:</strong>
+                    <ul>
+                      <li>مندرين - 55 د ج</li>
+                      <li>كليمونتين - 60 د ج</li>
+                      <li>مندرين قزمية - 65 د ج</li>
+                    </ul>
+                  </div>
+                  <div class="price">تبدأ الأسعار من: 55 د ج</div>
+                  <button class="cart-btn" onclick="showVarietySelection('المندرين', this)"><i class="fas fa-cart-plus"></i> أضف للسلة</button>
+                </div>
+              </div>
+            </div>
           </div>
-          <div class="price">تبدأ الأسعار من: 55 د ج</div>
-          <button class="cart-btn" onclick="showOrderForm('زيتون للإنتاج الزيتي والتريقد', 55)"><i class="fas fa-cart-plus"></i> أضف للسلة</button>
-        </div>
-      </div>
-  
-      <div class="product">
-        <img src="https://www.sarahanews.net/wp-content/uploads/2024/10/1000341277.jpg" alt="زيتون التخليل والترقيد">
-        <div class="product-info">
-          <h3>زيتون التخليل والترقيد</h3>
-          <p>صنف مميز للزيت والتخليل</p>
-          <div class="varieties">
-            <strong>الأصناف المتاحة:</strong>
-            <ul>
-              <li>فركاني - 65 د ج</li>
-              <li>البيكوال - 70 د ج</li>
-              <li>شملال - 75 د ج</li>
-            </ul>
-          </div>
-          <div class="price">تبدأ الأسعار من: 65 د ج</div>
-          <button class="cart-btn" onclick="showOrderForm('زيتون التخليل والزيت', 65)"><i class="fas fa-cart-plus"></i> أضف للسلة</button>
-        </div>
-      </div>
-    </div>
-  </div>
-  
-  <!-- محتوى الحمضيات -->
-  <div id="citrus" class="tab-content">
-    <div class="products">
-      <div class="product">
-        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/b0/OrangeBloss_wb.jpg/330px-OrangeBloss_wb.jpg" alt="برتقال">
-        <div class="product-info">
-          <h3>برتقال</h3>
-          <p>صنف حلو المذاق</p>
-          <div class="varieties">
-            <strong>الأصناف المتاحة:</strong>
-            <ul>
-              <li>طامسون - 45 د ج</li>
-              <li>بالنسي - 50 د ج</li>
-            </ul>
-          </div>
-          <div class="price">تبدأ الأسعار من: 45 د ج</div>
-          <button class="cart-btn" onclick="showOrderForm('برتقال', 45)"><i class="fas fa-cart-plus"></i> أضف للسلة</button>
-        </div>
-      </div>
-  
-      <div class="product">
-        <img src="https://www.mshtly.com/uploads/products/Citrus-aurantiifolia-10.jpeg" alt="ليمون">
-        <div class="product-info">
-          <h3>ليمون</h3>
-          <p>ليمون حمضي عالي الجودة</p>
-          <div class="varieties">
-            <strong>الأصناف المتاحة:</strong>
-            <ul>
-              <li>بنزهير - 50 د ج</li>
-              <li>04 فصول - 55 د ج</li>
-              <li>ليمون أصفر - 60 د ج</li>
-            </ul>
-          </div>
-          <div class="price">تبدأ الأسعار من: 50 د ج</div>
-          <button class="cart-btn" onclick="showOrderForm('ليمون', 50)"><i class="fas fa-cart-plus"></i> أضف للسلة</button>
-        </div>
-      </div>
-  
-      <div class="product">
-        <img src="https://sarayoman.com/wp-content/uploads/2020/11/mandarine2.jpg" alt="مندرين">
-        <div class="product-info">
-          <h3>المندرين</h3>
-          <p>فاكهة لذيذة سهلة التقشير</p>
-          <div class="varieties">
-            <strong>الأصناف المتاحة:</strong>
-            <ul>
-              <li>مندرين - 55 د ج</li>
-              <li>كليمونتين - 60 د ج</li>
-              <li>مندرين قزمية - 65 د ج</li>
-            </ul>
-          </div>
-          <div class="price">تبدأ الأسعار من: 55 د ج</div>
-          <button class="cart-btn" onclick="showOrderForm('مندرين', 55)"><i class="fas fa-cart-plus"></i> أضف للسلة</button>
-        </div>
-      </div>
-    </div>
-  </div>
-  
-  <!-- محتوى الفواكه بالنواة -->
-  <div id="stone" class="tab-content">
-    <div class="products">
-      <div class="product">
-        <img src="https://media.gemini.media/img/large/2019/2/8/2019_2_8_17_47_49_299.jpg" alt="خوخ">
-        <div class="product-info">
-          <h3>خوخ</h3>
-          <p>أشجار خوخ حلوة المذاق</p>
-          <div class="varieties">
-            <strong>الأصناف المتاحة:</strong>
-            <ul>
-              <li>خوخ مبكر - 65 د ج</li>
-              <li>خوخ كعب الغزال - 70 د ج</li>
-              <li>خوخ أبيض - 75 د ج</li>
-            </ul>
-          </div>
-          <div class="price">تبدأ الأسعار من: 65 د ج</div>
-          <button class="cart-btn" onclick="showOrderForm('خوخ', 65)"><i class="fas fa-cart-plus"></i> أضف للسلة</button>
-        </div>
-      </div>
-  
-      <div class="product">
-        <img src="https://img.youm7.com/ArticleImgs/2019/9/7/78315-%D9%85%D8%B4%D9%85%D8%B4-(2).jpg" alt="مشمش">
-        <div class="product-info">
-          <h3>مشمش</h3>
-          <p>أشجار مشمش عالية الإنتاج</p>
-          <div class="varieties">
-            <strong>الأصناف المتاحة:</strong>
-            <ul>
-              <li>مشمش حلواني - 70 د ج</li>
-              <li>مشمش كانينو - 75 د ج</li>
-            </ul>
-          </div>
-          <div class="price">تبدأ الأسعار من: 70 د ج</div>
-          <button class="cart-btn" onclick="showOrderForm('مشمش', 70)"><i class="fas fa-cart-plus"></i> أضف للسلة</button>
-        </div>
-      </div>
-  
-      <div class="product">
-        <img src="https://cdn.al-ain.com/lg/images/2021/6/07/173-103303-many-health-benefits-plums_700x400.jpg" alt="برقوق">
-        <div class="product-info">
-          <h3>برقوق</h3>
-          <p>أشجار برقوق عالية الإنتاج</p>
-          <div class="varieties">
-            <strong>الأصناف المتاحة:</strong>
-            <ul>
-              <li>برقوق أصفر - 70 د ج</li>
-              <li>برقوق أحمر - 75 د ج</li>
-            </ul>
-          </div>
-          <div class="price">تبدأ الأسعار من: 70 د ج</div>
-          <button class="cart-btn" onclick="showOrderForm('برقوق', 70)"><i class="fas fa-cart-plus"></i> أضف للسلة</button>
-        </div>
-      </div>
+          
+          <!-- محتوى الفواكه بالنواة -->
+          <div id="stone" class="tab-content">
+            <div class="products">
+              <div class="product">
+                <img src="https://media.gemini.media/img/large/2019/2/8/2019_2_8_17_47_49_299.jpg" alt="خوخ">
+                <div class="product-info">
+                  <h3>خوخ</h3>
+                  <p>أشجار خوخ حلوة المذاق</p>
+                  <div class="varieties">
+                    <strong>الأصناف المتاحة:</strong>
+                    <ul>
+                      <li>خوخ مبكر - 65 د ج</li>
+                      <li>خوخ كعب الغزال - 70 د ج</li>
+                      <li>خوخ أبيض - 75 د ج</li>
+                    </ul>
+                  </div>
+                  <div class="price">تبدأ الأسعار من: 65 د ج</div>
+                  <button class="cart-btn" onclick="showVarietySelection('خوخ', this)"><i class="fas fa-cart-plus"></i> أضف للسلة</button>
+                </div>
+              </div>
+          
+              <div class="product">
+                <img src="https://img.youm7.com/ArticleImgs/2019/9/7/78315-%D9%85%D8%B4%D9%85%D8%B4-(2).jpg" alt="مشمش">
+                <div class="product-info">
+                  <h3>مشمش</h3>
+                  <p>أشجار مشمش عالية الإنتاج</p>
+                  <div class="varieties">
+                    <strong>الأصناف المتاحة:</strong>
+                    <ul>
+                      <li>مشمش حلواني - 70 د ج</li>
+                      <li>مشمش كانينو - 75 د ج</li>
+                    </ul>
+                  </div>
+                  <div class="price">تبدأ الأسعار من: 70 د ج</div>
+                  <button class="cart-btn" onclick="showVarietySelection('مشمش', this)"><i class="fas fa-cart-plus"></i> أضف للسلة</button>
+                </div>
+              </div>
+          
+              <div class="product">
+                <img src="https://cdn.al-ain.com/lg/images/2021/6/07/173-103303-many-health-benefits-plums_700x400.jpg" alt="برقوق">
+                <div class="product-info">
+                  <h3>برقوق</h3>
+                  <p>أشجار برقوق عالية الإنتاج</p>
+                  <div class="varieties">
+                    <strong>الأصناف المتاحة:</strong>
+                    <ul>
+                      <li>برقوق أصفر - 70 د ج</li>
+                      <li>برقوق أحمر - 75 د ج</li>
+                    </ul>
+                  </div>
+                  <div class="price">تبدأ الأسعار من: 70 د ج</div>
+                  <button class="cart-btn" onclick="showVarietySelection('برقوق', this)"><i class="fas fa-cart-plus"></i> أضف للسلة</button>
+                </div>
+              </div>
 
-      <div class="product">
-        <img src="https://cdn.al-ain.com/lg/images/2019/1/15/133-024911-pomegranate-treats-inflammation-bowel_700x400.jpeg" alt="رمان">
-        <div class="product-info">
-          <h3>رمان</h3>
-          <p>أشجار رمان مثمرة</p>
-          <div class="varieties">
-            <strong>الأصناف المتاحة:</strong>
-            <ul>
-              <li>رمان حلواني - 60 د ج</li>
-              <li>رمان مانجولاتي - 65 د ج</li>
-              <li>رمان بلدي - 70 د ج</li>
-            </ul>
+              <div class="product">
+                <img src="https://cdn.al-ain.com/lg/images/2019/1/15/133-024911-pomegranate-treats-inflammation-bowel_700x400.jpeg" alt="رمان">
+                <div class="product-info">
+                  <h3>رمان</h3>
+                  <p>أشجار رمان مثمرة</p>
+                  <div class="varieties">
+                    <strong>الأصناف المتاحة:</strong>
+                    <ul>
+                      <li>رمان حلواني - 60 د ج</li>
+                      <li>رمان مانجولاتي - 65 د ج</li>
+                      <li>رمان بلدي - 70 د ج</li>
+                    </ul>
+                  </div>
+                  <div class="price">تبدأ الأسعار من: 60 د ج</div>
+                  <button class="cart-btn" onclick="showVarietySelection('رمان', this)"><i class="fas fa-cart-plus"></i> أضف للسلة</button>
+                </div>
+              </div>
+            </div>
           </div>
-          <div class="price">تبدأ الأسعار من: 60 د ج</div>
-          <button class="cart-btn" onclick="showOrderForm('رمان', 60)"><i class="fas fa-cart-plus"></i> أضف للسلة</button>
-        </div>
-      </div>
-    </div>
-  </div>
-  
-  <!-- محتوى الكروم -->
-  <div id="vines" class="tab-content">
-    <div class="products">
-      <div class="product">
-        <img src="http://www.expoegypt.gov.eg/uploads/2021/09/61530946e4453.jpg" alt="عنب">
-        <div class="product-info">
-          <h3>عنب</h3>
-          <p>أصناف عنب ممتازة</p>
-          <div class="varieties">
-            <strong>الأصناف المتاحة:</strong>
-            <ul>
-              <li>عنب أحمر - 70 د ج</li>
-              <li>عنب أبيض - 75 د ج</li>
-              <li>عنب أسود - 80 د ج</li>
-            </ul>
+          
+          <!-- محتوى الكروم -->
+          <div id="vines" class="tab-content">
+            <div class="products">
+              <div class="product">
+                <img src="http://www.expoegypt.gov.eg/uploads/2021/09/61530946e4453.jpg" alt="عنب">
+                <div class="product-info">
+                  <h3>عنب</h3>
+                  <p>أصناف عنب ممتازة</p>
+                  <div class="varieties">
+                    <strong>الأصناف المتاحة:</strong>
+                    <ul>
+                      <li>عنب أحمر - 70 د ج</li>
+                      <li>عنب أبيض - 75 د ج</li>
+                      <li>عنب أسود - 80 د ج</li>
+                    </ul>
+                  </div>
+                  <div class="price">تبدأ الأسعار من: 70 د ج</div>
+                  <button class="cart-btn" onclick="showVarietySelection('عنب', this)"><i class="fas fa-cart-plus"></i> أضف للسلة</button>
+                </div>
+              </div>
+          
+              <div class="product">
+                <img src="https://static.webteb.net/images/content/slideshowslide_sss_6239_5339275077e-6df7-485f-9d94-3271619fd657.jpg" alt="توت">
+                <div class="product-info">
+                  <h3>توت</h3>
+                  <p>أشجار توت مثمرة</p>
+                  <div class="varieties">
+                    <strong>الأصناف المتاحة:</strong>
+                    <ul>
+                      <li>توت أسود - 65 د ج</li>
+                      <li>توت أبيض - 70 د ج</li>
+                    </ul>
+                  </div>
+                  <div class="price">تبدأ الأسعار من: 65 د ج</div>
+                  <button class="cart-btn" onclick="showVarietySelection('توت', this)"><i class="fas fa-cart-plus"></i> أضف للسلة</button>
+                </div>
+              </div>
+          
+              <div class="product">
+                <img src="https://alpha-ar-media.almayadeen.net/archive/image/2022/8/7/06117e14-3f21-4997-9f04-a8be75df5b40.jpg" alt="تين">
+                <div class="product-info">
+                  <h3>تين</h3>
+                  <p>أشجار تين مثمرة</p>
+                  <div class="varieties">
+                    <strong>الأصناف المتاحة:</strong>
+                    <ul>
+                      <li>تين أسود - 65 د ج</li>
+                      <li>تين أبيض - 70 د ج</li>
+                    </ul>
+                  </div>
+                  <div class="price">تبدأ الأسعار من: 65 د ج</div>
+                  <button class="cart-btn" onclick="showVarietySelection('تين', this)"><i class="fas fa-cart-plus"></i> أضف للسلة</button>
+                </div>
+              </div>
+            </div>
           </div>
-          <div class="price">تبدأ الأسعار من: 70 د ج</div>
-          <button class="cart-btn" onclick="showOrderForm('عنب', 70)"><i class="fas fa-cart-plus"></i> أضف للسلة</button>
-        </div>
-      </div>
-  
-      <div class="product">
-        <img src="https://static.webteb.net/images/content/slideshowslide_sss_6239_5339275077e-6df7-485f-9d94-3271619fd657.jpg" alt="توت">
-        <div class="product-info">
-          <h3>توت</h3>
-          <p>أشجار توت مثمرة</p>
-          <div class="varieties">
-            <strong>الأصناف المتاحة:</strong>
-            <ul>
-              <li>توت أسود - 65 د ج</li>
-              <li>توت أبيض - 70 د ج</li>
-            </ul>
-          </div>
-          <div class="price">تبدأ الأسعار من: 65 د ج</div>
-          <button class="cart-btn" onclick="showOrderForm('توت', 65)"><i class="fas fa-cart-plus"></i> أضف للسلة</button>
-        </div>
-      </div>
-  
-      <div class="product">
-        <img src="https://alpha-ar-media.almayadeen.net/archive/image/2022/8/7/06117e14-3f21-4997-9f04-a8be75df5b40.jpg" alt="تين">
-        <div class="product-info">
-          <h3>تين</h3>
-          <p>أشجار تين مثمرة</p>
-          <div class="varieties">
-            <strong>الأصناف المتاحة:</strong>
-            <ul>
-              <li>تين أسود - 65 د ج</li>
-              <li>تين أبيض - 70 د ج</li>
-            </ul>
-          </div>
-          <div class="price">تبدأ الأسعار من: 65 د ج</div>
-          <button class="cart-btn" onclick="showOrderForm('تين', 65)"><i class="fas fa-cart-plus"></i> أضف للسلة</button>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
+        </section>
 
 
-<!-- قسم الورود والزهور -->
+        <!-- قسم الورود والزهور -->
         <section id="flowers" class="category">
             <div class="category-header">
                 <h2>ورود، زهور ونبتات التزيين</h2>
@@ -722,7 +800,7 @@
                                 </ul>
                             </div>
                             <div class="price">تبدأ الأسعار من: 40 د ج</div>
-                            <button class="cart-btn" onclick="showOrderForm('ورد جوري', 40)"><i class="fas fa-cart-plus"></i> أضف للسلة</button>
+                            <button class="cart-btn" onclick="showVarietySelection('ورد جوري', this)"><i class="fas fa-cart-plus"></i> أضف للسلة</button>
                         </div>
                     </div>
                     
@@ -732,7 +810,7 @@
                             <h3>ورد فل</h3>
                             <p>رائحته فواحة وأزهاره بيضاء</p>
                             <div class="price">سعر الشتلة: 35 د ج</div>
-                            <button class="cart-btn" onclick="showOrderForm('ورد فل', 35)"><i class="fas fa-cart-plus"></i> أضف للسلة</button>
+                            <button class="cart-btn" onclick="addToCart('ورد فل', '', 35)"><i class="fas fa-cart-plus"></i> أضف للسلة</button>
                         </div>
                     </div>
                 </div>
@@ -754,7 +832,7 @@
                                 </ul>
                             </div>
                             <div class="price">تبدأ الأسعار من: 25 د ج</div>
-                            <button class="cart-btn" onclick="showOrderForm('أقحوان', 25)"><i class="fas fa-cart-plus"></i> أضف للسلة</button>
+                            <button class="cart-btn" onclick="showVarietySelection('أقحوان', this)"><i class="fas fa-cart-plus"></i> أضف للسلة</button>
                         </div>
                     </div>
                     
@@ -772,14 +850,14 @@
                                 </ul>
                             </div>
                             <div class="price">تبدأ الأسعار من: 20 د ج</div>
-                            <button class="cart-btn" onclick="showOrderForm('بيتونيا', 20)"><i class="fas fa-cart-plus"></i> أضف للسلة</button>
+                            <button class="cart-btn" onclick="showVarietySelection('بيتونيا', this)"><i class="fas fa-cart-plus"></i> أضف للسلة</button>
                         </div>
                     </div>
                 </div>
             </div>
         </section>
 
-<!-- قسم أشجار الزينة -->
+        <!-- قسم أشجار الزينة -->
         <section id="ornamental" class="category">
             <div class="category-header">
                 <h2>أشجار الزينة</h2>
@@ -799,7 +877,7 @@
                             </ul>
                         </div>
                         <div class="price">تبدأ الأسعار من: 75 د ج</div>
-                        <button class="cart-btn" onclick="showOrderForm('فيكس', 75)"><i class="fas fa-cart-plus"></i> أضف للسلة</button>
+                        <button class="cart-btn" onclick="showVarietySelection('فيكس', this)"><i class="fas fa-cart-plus"></i> أضف للسلة</button>
                     </div>
                 </div>
                 
@@ -817,13 +895,13 @@
                             </ul>
                         </div>
                         <div class="price">تبدأ الأسعار من: 50 د ج</div>
-                        <button class="cart-btn" onclick="showOrderForm('نباتات متسلقة', 50)"><i class="fas fa-cart-plus"></i> أضف للسلة</button>
+                        <button class="cart-btn" onclick="showVarietySelection('نباتات متسلقة', this)"><i class="fas fa-cart-plus"></i> أضف للسلة</button>
                     </div>
                 </div>
             </div>
         </section>
 
-<!-- قسم بيع البذور وشتلات الخضروات -->
+        <!-- قسم بيع البذور وشتلات الخضروات -->
         <section id="vegetables" class="category">
             <div class="category-header">
                 <h2>بذور وشتلات الخضروات</h2>
@@ -850,7 +928,7 @@
                                 </ul>
                             </div>
                             <div class="price">تبدأ الأسعار من: 15 د ج</div>
-                            <button class="cart-btn" onclick="showOrderForm('بذور طماطم', 15)"><i class="fas fa-cart-plus"></i> أضف للسلة</button>
+                            <button class="cart-btn" onclick="showVarietySelection('بذور طماطم', this)"><i class="fas fa-cart-plus"></i> أضف للسلة</button>
                         </div>
                     </div>
                     
@@ -860,7 +938,7 @@
                             <h3>بذور فلفل</h3>
                             <p>بذور فلفل حار وحلو</p>
                             <div class="price">سعر الكيس: 15 د ج</div>
-                            <button class="cart-btn" onclick="showOrderForm('بذور فلفل', 15)"><i class="fas fa-cart-plus"></i> أضف للسلة</button>
+                            <button class="cart-btn" onclick="addToCart('بذور فلفل', '', 15)"><i class="fas fa-cart-plus"></i> أضف للسلة</button>
                         </div>
                     </div>
                 </div>
@@ -874,7 +952,7 @@
                             <h3>شتلات طماطم</h3>
                             <p>شتلات جاهزة للزراعة</p>
                             <div class="price">سعر الشتلة: 25 د ج</div>
-                            <button class="cart-btn" onclick="showOrderForm('شتلات طماطم', 25)"><i class="fas fa-cart-plus"></i> أضف للسلة</button>
+                            <button class="cart-btn" onclick="addToCart('شتلات طماطم', '', 25)"><i class="fas fa-cart-plus"></i> أضف للسلة</button>
                         </div>
                     </div>
                     
@@ -884,20 +962,20 @@
                             <h3>شتلات فلفل</h3>
                             <p>شتلات فلفل حار وحلو</p>
                             <div class="price">سعر الشتلة: 25 د ج</div>
-                            <button class="cart-btn" onclick="showOrderForm('شتلات فلفل', 25)"><i class="fas fa-cart-plus"></i> أضف للسلة</button>
+                            <button class="cart-btn" onclick="addToCart('شتلات فلفل', '', 25)"><i class="fas fa-cart-plus"></i> أضف للسلة</button>
                         </div>
                     </div>
                 </div>
             </div>
         </section>
 
-<!-- قسم أدوات الزراعة -->
+        <!-- قسم أدوات الزراعة -->
         <section id="tools" class="category">
             <div class="category-header">
                 <h2>أدوات الزراعة</h2>
             </div>
 
-<!-- قسم الأسمــــدة والمعدات الزراعية -->
+            <!-- قسم الأسمــــدة والمعدات الزراعية -->
             <div class="products">
                 <div class="product">
                     <img src="https://images.unsplash.com/photo-1550258987-190a2d41a8ba?w=300&h=200&fit=crop&auto=format" alt="أسمدة">
@@ -913,7 +991,7 @@
                             </ul>
                         </div>
                         <div class="price">تبدأ الأسعار من: 30 د ج</div>
-                        <button class="cart-btn" onclick="showOrderForm('أسمدة عضوية', 30)"><i class="fas fa-cart-plus"></i> أضف للسلة</button>
+                        <button class="cart-btn" onclick="showVarietySelection('أسمدة عضوية', this)"><i class="fas fa-cart-plus"></i> أضف للسلة</button>
                     </div>
                 </div>
                 
@@ -923,73 +1001,91 @@
                         <h3>أدوات تقليم</h3>
                         <p>مجموعة متكاملة للعناية بالنباتات</p>
                         <div class="price">السعر: 120 د ج للمجموعة</div>
-                        <button class="cart-btn" onclick="showOrderForm('أدوات تقليم', 120)"><i class="fas fa-cart-plus"></i> أضف للسلة</button>
+                        <button class="cart-btn" onclick="addToCart('أدوات تقليم', '', 120)"><i class="fas fa-cart-plus"></i> أضف للسلة</button>
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- نموذج الطلب -->
-        <div id="orderForm" class="order-form" style="display: none;">
-            <h2>نموذج طلب الشراء</h2>
-            <form id="orderFormElement" action="https://script.google.com/macros/s/YOUR_GOOGLE_SCRIPT_ID/exec" method="POST">
-                <input type="hidden" id="selectedProduct" name="product">
-                <input type="hidden" id="selectedPrice" name="price">
-                
+        <!-- سلة المشتريات الكاملة -->
+        <div id="fullCart" class="order-form" style="display: none;">
+            <h2>سلة المشتريات</h2>
+            <div class="order-items">
+                <table id="cartTable">
+                    <thead>
+                        <tr>
+                            <th>الصنف</th>
+                            <th>النوع</th>
+                            <th>الكمية</th>
+                            <th>السعر</th>
+                            <th>المجموع</th>
+                            <th>إجراء</th>
+                        </tr>
+                    </thead>
+                    <tbody id="cartItems">
+                        <!-- سيتم ملؤها بالجافاسكريبت -->
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="order-summary">
+                <div class="summary-row">
+                    <span>المجموع الجزئي:</span>
+                    <span id="subtotal">0 د ج</span>
+                </div>
+                <div class="summary-row">
+                    <span>تكاليف التوصيل:</span>
+                    <span id="deliveryCost">0 د ج</span>
+                </div>
+                <div class="summary-row total">
+                    <span>المجموع الكلي:</span>
+                    <span id="total">0 د ج</span>
+                </div>
+            </div>
+
+            <h3>معلومات العميل</h3>
+            <form id="customerInfoForm">
                 <div class="form-row">
                     <div class="form-group">
-                        <label for="name">الاسم الكامل:</label>
-                        <input type="text" id="name" name="name" required>
+                        <label for="customerName">الاسم الكامل:</label>
+                        <input type="text" id="customerName" required>
                     </div>
                     <div class="form-group">
-                        <label for="phone">رقم الهاتف:</label>
-                        <input type="tel" id="phone" name="phone" required>
+                        <label for="customerPhone">رقم الهاتف:</label>
+                        <input type="tel" id="customerPhone" required>
                     </div>
                 </div>
-                
+
                 <div class="form-row">
                     <div class="form-group">
-                        <label for="email">البريد الإلكتروني:</label>
-                        <input type="email" id="email" name="email">
-                    </div>
-                    <div class="form-group">
-                        <label for="wilaya">الولاية:</label>
-                        <select id="wilaya" name="wilaya" required>
+                        <label for="customerWilaya">الولاية:</label>
+                        <select id="customerWilaya" required>
                             <option value="">-- اختر الولاية --</option>
                             <option value="الجزائر">الجزائر</option>
                             <option value="وهران">وهران</option>
                             <!-- إضافة بقية الولايات -->
                         </select>
                     </div>
-                </div>
-                
-                <div class="form-group">
-                    <label for="address">عنوان التوصيل:</label>
-                    <textarea id="address" name="address" rows="3" required></textarea>
-                </div>
-                
-                <div class="form-row">
                     <div class="form-group">
-                        <label for="quantity">الكمية:</label>
-                        <input type="number" id="quantity" name="quantity" min="1" value="1" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="delivery">طريقة الاستلام:</label>
-                        <select id="delivery" name="delivery" required>
-                            <option value="delivery">توصيل للمنزل</option>
-                            <option value="pickup">استلام من المتجر</option>
-                        </select>
+                        <label for="customerMunicipality">البلدية:</label>
+                        <input type="text" id="customerMunicipality" required>
                     </div>
                 </div>
-                
+
                 <div class="form-group">
-                    <label for="notes">ملاحظات إضافية:</label>
-                    <textarea id="notes" name="notes" rows="3"></textarea>
+                    <label for="customerAddress">عنوان التوصيل التفصيلي:</label>
+                    <textarea id="customerAddress" rows="3" required></textarea>
                 </div>
-                
+
+                <div class="form-group">
+                    <label for="customerNotes">ملاحظات إضافية:</label>
+                    <textarea id="customerNotes" rows="2"></textarea>
+                </div>
+
                 <div class="form-actions">
-                    <button type="submit"><i class="fas fa-check"></i> تأكيد الطلب</button>
-                    <button type="button" onclick="document.getElementById('orderForm').style.display='none'" class="cancel-btn"><i class="fas fa-times"></i> إلغاء</button>
+                    <button type="button" onclick="submitOrder()" class="cart-btn"><i class="fas fa-check"></i> تأكيد الطلب</button>
+                    <button type="button" onclick="clearCart()" class="cancel-btn"><i class="fas fa-trash"></i> إفراغ السلة</button>
+                    <button type="button" onclick="closeFullCart()" class="cancel-btn"><i class="fas fa-times"></i> إغلاق</button>
                 </div>
             </form>
         </div>
@@ -1007,6 +1103,8 @@
     <button id="backToTop" title="الرجوع للأعلى"><i class="fas fa-arrow-up"></i></button>
 
     <script>
+        let cart = [];
+
         // فتح تبويبات الأقسام
         function openTab(evt, tabName) {
             const tabContents = document.getElementsByClassName("tab-content");
@@ -1023,30 +1121,238 @@
             evt.currentTarget.classList.add("active");
         }
         
-        // عرض نموذج الطلب مع تعبئة المنتج المحدد
-        function showOrderForm(productName, productPrice) {
-            document.getElementById('selectedProduct').value = productName;
-            document.getElementById('selectedPrice').value = productPrice;
-            document.getElementById('orderForm').style.display = 'block';
+        // عرض اختيار الأصناف
+        function showVarietySelection(productName, buttonElement) {
+            const varietyList = buttonElement.closest('.product-info').querySelector('.varieties ul');
+            
+            if (varietyList && varietyList.children.length > 0) {
+                // إنشاء عنصر div للنافذة المنبثقة
+                const modal = document.createElement('div');
+                modal.id = 'varietyModal';
+                modal.style.position = 'fixed';
+                modal.style.top = '0';
+                modal.style.left = '0';
+                modal.style.width = '100%';
+                modal.style.height = '100%';
+                modal.style.backgroundColor = 'rgba(0,0,0,0.5)';
+                modal.style.display = 'flex';
+                modal.style.justifyContent = 'center';
+                modal.style.alignItems = 'center';
+                modal.style.zIndex = '10000';
+                
+                // إنشاء محتوى النافذة
+                let options = '';
+                Array.from(varietyList.children).forEach(li => {
+                    const [name, price] = li.textContent.split(' - ');
+                    options += `<option value="${name.trim()}|${price.trim().split(' ')[0]}">${name.trim()} - ${price.trim()}</option>`;
+                });
+                
+                modal.innerHTML = `
+                    <div style="background:white; padding:20px; border-radius:8px; width:300px; text-align:right; direction:rtl;">
+                        <h4 style="margin-top:0;">اختر الصنف</h4>
+                        <select id="varietySelect" style="width:100%; padding:8px; margin:10px 0; font-size:16px;">
+                            ${options}
+                        </select>
+                        <div style="display:flex; justify-content:space-between; margin-top:10px;">
+                            <button onclick="document.getElementById('varietyModal').remove()" 
+                                style="padding:8px 15px; background:#ccc; border:none; border-radius:4px;">إلغاء</button>
+                            <button onclick="addSelectedVariety('${productName}')" 
+                                style="padding:8px 15px; background:#2e7d32; color:white; border:none; border-radius:4px;">إضافة</button>
+                        </div>
+                    </div>
+                `;
+                
+                document.body.appendChild(modal);
+            } else {
+                // إذا لم يكن هناك أصناف، أضف المنتج مباشرة
+                const priceText = buttonElement.closest('.product-info').querySelector('.price').textContent;
+                const price = parseFloat(priceText.split(' ')[3]);
+                addToCart(productName, '', price);
+            }
+        }
+
+        // إضافة الصنف المختار للسلة
+        function addSelectedVariety(productName) {
+            const varietySelect = document.getElementById('varietySelect');
+            const [varietyName, price] = varietySelect.value.split('|');
+            
+            addToCart(productName, varietyName, parseFloat(price));
+            document.getElementById('varietyModal').remove();
+        }
+
+        // إضافة منتج للسلة
+        function addToCart(productName, variety, price, quantity = 1) {
+            // تنظيف بيانات الإدخال
+            variety = variety || 'عام';
+            price = parseFloat(price);
+            quantity = parseInt(quantity) || 1;
+            
+            // البحث عن المنتج في السلة
+            const existingItem = cart.find(item => 
+                item.productName === productName && item.variety === variety);
+            
+            if (existingItem) {
+                existingItem.quantity += quantity;
+            } else {
+                cart.push({
+                    productName,
+                    variety,
+                    price,
+                    quantity
+                });
+            }
+            
+            updateCartDisplay();
+            
+            // إظهار تنبيه بإضافة المنتج
+            alert(`تم إضافة ${productName} (${variety}) إلى السلة`);
+        }
+
+        // عرض السلة الكاملة
+        function showFullCart() {
+            document.getElementById('fullCart').style.display = 'block';
             window.scrollTo({
-                top: document.getElementById('orderForm').offsetTop,
+                top: document.getElementById('fullCart').offsetTop,
                 behavior: 'smooth'
             });
         }
-        
-        // إرسال النموذج إلى جوجل شيت
-        document.getElementById('orderFormElement').addEventListener('submit', function(e) {
-            e.preventDefault();
+
+        // إغلاق السلة الكاملة
+        function closeFullCart() {
+            document.getElementById('fullCart').style.display = 'none';
+        }
+
+        // تحديث عرض السلة
+        function updateCartDisplay() {
+            const dropdownItems = document.getElementById('dropdownCartItems');
+            const fullCartItems = document.getElementById('cartItems');
             
-            fetch(this.action, {
+            dropdownItems.innerHTML = '';
+            fullCartItems.innerHTML = '';
+            
+            let subtotal = 0;
+            
+            if (cart.length === 0) {
+                dropdownItems.innerHTML = '<p style="text-align: center; color: #666;">السلة فارغة</p>';
+            } else {
+                cart.forEach((item, index) => {
+                    const total = item.price * item.quantity;
+                    subtotal += total;
+                    
+                    // عنصر السلة المنبثقة
+                    const dropdownItem = document.createElement('div');
+                    dropdownItem.className = 'cart-item';
+                    dropdownItem.innerHTML = `
+                        <div class="cart-item-details">
+                            <strong>${item.productName}</strong>
+                            <div>${item.variety} - ${item.price} د ج</div>
+                        </div>
+                        <div class="cart-item-actions">
+                            <input type="number" min="1" value="${item.quantity}" 
+                                onchange="updateQuantity(${index}, this.value)">
+                            <span class="remove-item" onclick="removeItem(${index})">
+                                <i class="fas fa-trash"></i>
+                            </span>
+                        </div>
+                    `;
+                    dropdownItems.appendChild(dropdownItem);
+                    
+                    // عنصر السلة الكاملة
+                    const fullItem = document.createElement('tr');
+                    fullItem.innerHTML = `
+                        <td>${item.productName}</td>
+                        <td>${item.variety}</td>
+                        <td>
+                            <input type="number" min="1" value="${item.quantity}" 
+                                onchange="updateQuantity(${index}, this.value)">
+                        </td>
+                        <td>${item.price} د ج</td>
+                        <td>${total} د ج</td>
+                        <td>
+                            <span class="remove-item" onclick="removeItem(${index})">
+                                <i class="fas fa-trash"></i>
+                            </span>
+                        </td>
+                    `;
+                    fullCartItems.appendChild(fullItem);
+                });
+            }
+            
+            document.getElementById('subtotal').textContent = `${subtotal} د ج`;
+            document.getElementById('dropdownSubtotal').textContent = `${subtotal} د ج`;
+            
+            // حساب تكاليف التوصيل
+            const deliveryCost = subtotal > 0 ? 500 : 0;
+            document.getElementById('deliveryCost').textContent = `${deliveryCost} د ج`;
+            
+            const total = subtotal + deliveryCost;
+            document.getElementById('total').textContent = `${total} د ج`;
+            
+            updateCartCount();
+        }
+
+        // تحديث الكمية
+        function updateQuantity(index, newQuantity) {
+            if (newQuantity >= 1) {
+                cart[index].quantity = parseInt(newQuantity);
+                updateCartDisplay();
+            }
+        }
+
+        // إزالة عنصر من السلة
+        function removeItem(index) {
+            cart.splice(index, 1);
+            updateCartDisplay();
+        }
+
+        // إفراغ السلة
+        function clearCart() {
+            if (confirm('هل أنت متأكد من رغبتك في إفراغ سلة المشتريات؟')) {
+                cart = [];
+                updateCartDisplay();
+            }
+        }
+
+        // تأكيد الطلب
+        function submitOrder() {
+            const form = document.getElementById('customerInfoForm');
+            if (!form.checkValidity()) {
+                alert('الرجاء تعبئة جميع الحقول المطلوبة');
+                return;
+            }
+            
+            const orderData = {
+                customer: {
+                    name: document.getElementById('customerName').value,
+                    phone: document.getElementById('customerPhone').value,
+                    wilaya: document.getElementById('customerWilaya').value,
+                    municipality: document.getElementById('customerMunicipality').value,
+                    address: document.getElementById('customerAddress').value,
+                    notes: document.getElementById('customerNotes').value
+                },
+                items: cart,
+                subtotal: document.getElementById('subtotal').textContent,
+                delivery: document.getElementById('deliveryCost').textContent,
+                total: document.getElementById('total').textContent,
+                date: new Date().toLocaleString()
+            };
+            
+            // هنا يمكنك إرسال البيانات إلى الخادم
+            console.log(orderData); // للاختبار فقط
+            
+            fetch('https://script.google.com/macros/s/YOUR_GOOGLE_SCRIPT_ID/exec', {
                 method: 'POST',
-                body: new FormData(this),
+                body: JSON.stringify(orderData),
+                headers: {
+                    'Content-Type': 'application/json'
+                }
             })
             .then(response => {
                 if (response.ok) {
-                    alert('تم إرسال طلبك بنجاح! سنتصل بك قريباً.');
-                    this.reset();
-                    document.getElementById('orderForm').style.display = 'none';
+                    alert('تم تأكيد طلبك بنجاح! سنتصل بك قريباً.');
+                    cart = [];
+                    form.reset();
+                    closeFullCart();
                 } else {
                     throw new Error('حدث خطأ أثناء إرسال الطلب.');
                 }
@@ -1054,7 +1360,13 @@
             .catch(error => {
                 alert(error.message);
             });
-        });
+        }
+
+        // تحديث عداد السلة
+        function updateCartCount() {
+            const count = cart.reduce((total, item) => total + item.quantity, 0);
+            document.getElementById('cartCount').textContent = count;
+        }
         
         // التنقل السلس عند النقر على روابط القائمة
         document.querySelectorAll('nav a').forEach(anchor => {
@@ -1117,14 +1429,6 @@
         document.getElementById('searchInput').addEventListener('keyup', function(e) {
             if (e.key === 'Enter') {
                 searchProducts();
-            }
-        });
-        
-        // إغلاق نموذج الطلب عند النقر خارج النموذج
-        window.addEventListener('click', function(event) {
-            const orderForm = document.getElementById('orderForm');
-            if (event.target === orderForm) {
-                orderForm.style.display = 'none';
             }
         });
     </script>
