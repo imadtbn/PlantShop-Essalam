@@ -1,0 +1,690 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>متجر نباتاتي - شتلات وورود وأشجار زينة</title>
+    <style>
+        :root {
+            --primary-color: #2e7d32;
+            --secondary-color: #81c784;
+            --light-color: #f1f8e9;
+            --dark-color: #1b5e20;
+        }
+        body {
+            font-family: 'Tajawal', Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f5f5f5;
+            color: #333;
+        }
+        header {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+        nav {
+            background-color: var(--dark-color);
+            padding: 10px;
+        }
+        nav ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        nav li {
+            margin: 0 15px;
+        }
+        nav a {
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+            padding: 5px 10px;
+            border-radius: 4px;
+            transition: background-color 0.3s;
+        }
+        nav a:hover {
+            background-color: var(--primary-color);
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .category {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            padding: 15px;
+            margin-bottom: 30px;
+        }
+        .category-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid var(--light-color);
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+        .products {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 20px;
+        }
+        .product {
+            background-color: var(--light-color);
+            border-radius: 8px;
+            overflow: hidden;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        .product:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        .product img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+        .product-info {
+            padding: 15px;
+        }
+        .price {
+            font-weight: bold;
+            color: var(--primary-color);
+            font-size: 1.2em;
+            margin: 10px 0;
+        }
+        .varieties {
+            margin-top: 10px;
+            font-size: 0.9em;
+            color: #666;
+        }
+        .varieties ul {
+            padding-right: 15px;
+            margin: 5px 0;
+        }
+        .order-form {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            margin-top: 30px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        input, select, textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+            font-family: inherit;
+        }
+        button {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: var(--dark-color);
+        }
+        footer {
+            background-color: var(--dark-color);
+            color: white;
+            text-align: center;
+            padding: 20px;
+            margin-top: 30px;
+        }
+        .tabs {
+            display: flex;
+            margin-bottom: 20px;
+            border-bottom: 1px solid #ddd;
+        }
+        .tab {
+            padding: 10px 20px;
+            cursor: pointer;
+            background-color: #f1f1f1;
+            margin-left: 5px;
+            border-radius: 5px 5px 0 0;
+        }
+        .tab.active {
+            background-color: var(--primary-color);
+            color: white;
+        }
+        .tab-content {
+            display: none;
+        }
+        .tab-content.active {
+            display: block;
+        }
+        @media (max-width: 768px) {
+            .products {
+                grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            }
+            nav ul {
+                flex-direction: column;
+                align-items: center;
+            }
+            nav li {
+                margin: 5px 0;
+            }
+        }
+    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header>
+        <h1>متجر نباتاتي</h1>
+        <p>أجود أنواع الشتلات والورود وأشجار الزينة</p>
+    </header>
+
+    <nav>
+        <ul>
+            <li><a href="#fruit-trees">الأشجار المثمرة</a></li>
+            <li><a href="#flowers">الورود والزهور</a></li>
+            <li><a href="#ornamental">أشجار الزينة</a></li>
+            <li><a href="#tools">أدوات الزراعة</a></li>
+            <li><a href="#contact">اتصل بنا</a></li>
+        </ul>
+    </nav>
+
+    <div class="container">
+        <!-- قسم الأشجار المثمرة -->
+        <section id="fruit-trees" class="category">
+            <div class="category-header">
+                <h2>الأشجار المثمرة</h2>
+            </div>
+            
+            <div class="tabs">
+                <div class="tab active" onclick="openTab(event, 'olive')">الزيتون</div>
+                <div class="tab" onclick="openTab(event, 'citrus')">الحمضيات</div>
+                <div class="tab" onclick="openTab(event, 'stone')">الفواكه النواة</div>
+                <div class="tab" onclick="openTab(event, 'vines')">الكروم</div>
+
+            </div>
+            
+            <div id="olive" class="tab-content active">
+                <div class="products">
+                    <div class="product">
+                        <img src="https://via.placeholder.com/300x200?text=زيتون+نبالي" alt="زيتون نبالي">
+                        <div class="product-info">
+                            <h3>زيتون نبالي</h3>
+                            <p>صنف ممتاز للإنتاج الزيتي</p>
+                            <div class="varieties">
+                                <strong>الأصناف المتاحة:</strong>
+                                <ul>
+                                    <li>نبالي محسن</li>
+                                    <li>نبالي بلدي</li>
+                                    <li>نبالي أحمر</li>
+                                </ul>
+                            </div>
+                            <div class="price">سعر الشتلة: 60 د ج</div>
+                            <button onclick="showOrderForm('زيتون نبالي', 60)">اطلب الآن</button>
+                        </div>
+                    </div>
+                    
+                    <div class="product">
+                        <img src="https://via.placeholder.com/300x200?text=زيتون+صوراني" alt="زيتون صوراني">
+                        <div class="product-info">
+                            <h3>زيتون صوراني</h3>
+                            <p>من أفضل الأصناف للتخليل</p>
+                            <div class="varieties">
+                                <strong>الأصناف المتاحة:</strong>
+                                <ul>
+                                    <li>صوراني أسود</li>
+                                    <li>صوراني أخضر</li>
+                                </ul>
+                            </div>
+                            <div class="price">سعر الشتلة: 55 د ج</div>
+                            <button onclick="showOrderForm('زيتون صوراني', 55)">اطلب الآن</button>
+                        </div>
+                    </div>
+                    
+                    <div class="product">
+                        <img src="https://via.placeholder.com/300x200?text=زيتون+خضيري" alt="زيتون خضيري">
+                        <div class="product-info">
+                            <h3>زيتون خضيري</h3>
+                            <p>صنف مميز للزيت والتخليل</p>
+                            <div class="price">سعر الشتلة: 65 د ج</div>
+                            <button onclick="showOrderForm('زيتون خضيري', 65)">اطلب الآن</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div id="citrus" class="tab-content">
+                <div class="products">
+                    <div class="product">
+                        <img src="https://via.placeholder.com/300x200?text=برتقال+ابو+صرة" alt="برتقال ابو صرة">
+                        <div class="product-info">
+                            <h3>برتقال أبو صرة</h3>
+                            <p>صنف حلو المذاق</p>
+                            <div class="varieties">
+                                <strong>الأصناف المتاحة:</strong>
+                                <ul>
+                                    <li>أبو صرة مبكر</li>
+                                    <li>أبو صرة متأخر</li>
+                                </ul>
+                            </div>
+                            <div class="price">سعر الشتلة: 45 د ج</div>
+                            <button onclick="showOrderForm('برتقال أبو صرة', 45)">اطلب الآن</button>
+                        </div>
+                    </div>
+                    
+                    <div class="product">
+                        <img src="https://via.placeholder.com/300x200?text=ليمون+بنزهير" alt="ليمون بنزهير">
+                        <div class="product-info">
+                            <h3>ليمون بنزهير</h3>
+                            <p>ليمون حمضي عالي الجودة</p>
+                            <div class="price">سعر الشتلة: 50 د ج</div>
+                            <button onclick="showOrderForm('ليمون بنزهير', 50)">اطلب الآن</button>
+                        </div>
+                    </div>
+                    
+                    <div class="product">
+                        <img src="https://via.placeholder.com/300x200?text=يوسفي" alt="يوسفي">
+                        <div class="product-info">
+                            <h3>يوسفي</h3>
+                            <p>فاكهة لذيذة سهلة التقشير</p>
+                            <div class="varieties">
+                                <strong>الأصناف المتاحة:</strong>
+                                <ul>
+                                    <li>يوسفي عادي</li>
+                                    <li>يوسفي موركوت</li>
+                                </ul>
+                            </div>
+                            <div class="price">سعر الشتلة: 55 د ج</div>
+                            <button onclick="showOrderForm('يوسفي', 55)">اطلب الآن</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div id="stone" class="tab-content">
+                <div class="products">
+                    <div class="product">
+                        <img src="https://via.placeholder.com/300x200?text=خوخ" alt="خوخ">
+                        <div class="product-info">
+                            <h3>خوخ</h3>
+                            <p>أشجار خوخ مثمرة</p>
+                            <div class="varieties">
+                                <strong>الأصناف المتاحة:</strong>
+                                <ul>
+                                    <li>خوخ أصفر</li>
+                                    <li>خوخ أحمر</li>
+                                    <li>خوخ بلدي</li>
+                                </ul>
+                            </div>
+                            <div class="price">سعر الشتلة: 65 د ج</div>
+                            <button onclick="showOrderForm('خوخ', 65)">اطلب الآن</button>
+                        </div>
+                    </div>
+                    
+                    <div class="product">
+                        <img src="https://via.placeholder.com/300x200?text=مشمش" alt="مشمش">
+                        <div class="product-info">
+                            <h3>مشمش</h3>
+                            <p>أشجار مشمش عالية الإنتاج</p>
+                            <div class="varieties">
+                                <strong>الأصناف المتاحة:</strong>
+                                <ul>
+                                    <li>مشمش حلواني</li>
+                                    <li>مشمش كانينو</li>
+                                </ul>
+                            </div>
+                            <div class="price">سعر الشتلة: 70 د ج</div>
+                            <button onclick="showOrderForm('مشمش', 70)">اطلب الآن</button>
+                        </div>
+                    </div>
+                    
+                    <div class="product">
+                        <img src="https://via.placeholder.com/300x200?text=رمان" alt="رمان">
+                        <div class="product-info">
+                            <h3>رمان</h3>
+                            <p>أشجار رمان مثمرة</p>
+                            <div class="varieties">
+                                <strong>الأصناف المتاحة:</strong>
+                                <ul>
+                                    <li>رمان حلواني</li>
+                                    <li>رمان مانجولاتي</li>
+                                    <li>رمان بلدي</li>
+                                </ul>
+                            </div>
+                            <div class="price">سعر الشتلة: 60 د ج</div>
+                            <button onclick="showOrderForm('رمان', 60)">اطلب الآن</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- داخل قسم الأشجار المثمرة بعد تبويب الفواكه النواة -->
+
+<div id="vines" class="tab-content">
+    <div class="products">
+        <div class="product">
+            <img src="https://images.unsplash.com/photo-1604977042946-5f70e5b298d6?w=300&h=200&fit=crop&auto=format" alt="عنب">
+            <div class="product-info">
+                <h3>عنب</h3>
+                <p>أصناف عنب ممتازة</p>
+                <div class="varieties">
+                    <strong>الأصناف المتاحة:</strong>
+                    <ul>
+                        <li>عنب أحمر</li>
+                        <li>عنب أبيض</li>
+                        <li>عنب أسود</li>
+                    </ul>
+                </div>
+                <div class="price">سعر الشتلة: 70 د ج</div>
+                <button onclick="showOrderForm('عنب', 70)">اطلب الآن</button>
+            </div>
+        </div>
+        
+        <div class="product">
+            <img src="https://images.unsplash.com/photo-1603048719539-6d5a1d4a61e0?w=300&h=200&fit=crop&auto=format" alt="توت">
+            <div class="product-info">
+                <h3>توت</h3>
+                <p>أشجار توت مثمرة</p>
+                <div class="varieties">
+                    <strong>الأصناف المتاحة:</strong>
+                    <ul>
+                        <li>توت أسود</li>
+                        <li>توت أبيض</li>
+                    </ul>
+                </div>
+                <div class="price">سعر الشتلة: 65 د ج</div>
+                <button onclick="showOrderForm('توت', 65)">اطلب الآن</button>
+            </div>
+        </div>
+    </div>
+</div>
+            
+        </section>
+
+        <!-- قسم الورود والزهور -->
+        <section id="flowers" class="category">
+            <div class="category-header">
+                <h2>ورود، زهور ونبتات الزينة</h2>
+            </div>
+            
+            <div class="tabs">
+                <div class="tab active" onclick="openTab(event, 'roses')">الورود</div>
+                <div class="tab" onclick="openTab(event, 'seasonal')">الزهور الموسمية</div>
+            </div>
+            
+            <div id="roses" class="tab-content active">
+                <div class="products">
+                    <div class="product">
+                        <img src="https://via.placeholder.com/300x200?text=ورد+جوري" alt="ورد جوري">
+                        <div class="product-info">
+                            <h3>ورد جوري</h3>
+                            <p>ملكة الزهور برائحتها العطرة</p>
+                            <div class="varieties">
+                                <strong>الأصناف المتاحة:</strong>
+                                <ul>
+                                    <li>جوري أحمر</li>
+                                    <li>جوري وردي</li>
+                                    <li>جوري أبيض</li>
+                                </ul>
+                            </div>
+                            <div class="price">سعر الشتلة: 40 د ج</div>
+                            <button onclick="showOrderForm('ورد جوري', 40)">اطلب الآن</button>
+                        </div>
+                    </div>
+                    
+                    <div class="product">
+                        <img src="https://via.placeholder.com/300x200?text=ورد+فل" alt="ورد فل">
+                        <div class="product-info">
+                            <h3>ورد فل</h3>
+                            <p>رائحته فواحة وأزهاره بيضاء</p>
+                            <div class="price">سعر الشتلة: 35 د ج</div>
+                            <button onclick="showOrderForm('ورد فل', 35)">اطلب الآن</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div id="seasonal" class="tab-content">
+                <div class="products">
+                    <div class="product">
+                        <img src="https://via.placeholder.com/300x200?text=أقحوان" alt="أقحوان">
+                        <div class="product-info">
+                            <h3>أقحوان</h3>
+                            <p>زهور ملونة طويلة العمر</p>
+                            <div class="varieties">
+                                <strong>الأصناف المتاحة:</strong>
+                                <ul>
+                                    <li>أقحوان أصفر</li>
+                                    <li>أقحوان أبيض</li>
+                                    <li>أقحوان بنفسجي</li>
+                                </ul>
+                            </div>
+                            <div class="price">سعر الشتلة: 25 د ج</div>
+                            <button onclick="showOrderForm('أقحوان', 25)">اطلب الآن</button>
+                        </div>
+                    </div>
+                    
+                    <div class="product">
+                        <img src="https://via.placeholder.com/300x200?text=بيتونيا" alt="بيتونيا">
+                        <div class="product-info">
+                            <h3>بيتونيا</h3>
+                            <p>زهور متعددة الألوان</p>
+                            <div class="varieties">
+                                <strong>الأصناف المتاحة:</strong>
+                                <ul>
+                                    <li>بيتونيا حمراء</li>
+                                    <li>بيتونيا زهرية</li>
+                                    <li>بيتونيا بيضاء</li>
+                                </ul>
+                            </div>
+                            <div class="price">سعر الشتلة: 20 د ج</div>
+                            <button onclick="showOrderForm('بيتونيا', 20)">اطلب الآن</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- قسم أشجار الزينة -->
+        <section id="ornamental" class="category">
+            <div class="category-header">
+                <h2>أشجار الزينة</h2>
+            </div>
+            
+            <div class="products">
+                <div class="product">
+                    <img src="https://via.placeholder.com/300x200?text=فيكس" alt="فيكس">
+                    <div class="product-info">
+                        <h3>فيكس</h3>
+                        <p>شجرة زينة دائمة الخضرة</p>
+                        <div class="varieties">
+                            <strong>الأصناف المتاحة:</strong>
+                            <ul>
+                                <li>فيكس نتدا</li>
+                                <li>فيكس بنجامينا</li>
+                            </ul>
+                        </div>
+                        <div class="price">سعر الشتلة: 75 د ج</div>
+                        <button onclick="showOrderForm('فيكس', 75)">اطلب الآن</button>
+                    </div>
+                </div>
+                
+                <div class="product">
+                    <img src="https://via.placeholder.com/300x200?text=زينة+متسلقة" alt="زينة متسلقة">
+                    <div class="product-info">
+                        <h3>نباتات متسلقة</h3>
+                        <p>لتغطية الجدران والأسوار</p>
+                        <div class="varieties">
+                            <strong>الأصناف المتاحة:</strong>
+                            <ul>
+                                <li>ياسمين</li>
+                                <li>هيدرا</li>
+                                <li>كرمة</li>
+                            </ul>
+                        </div>
+                        <div class="price">سعر الشتلة: 50 د ج</div>
+                        <button onclick="showOrderForm('نباتات متسلقة', 50)">اطلب الآن</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- قسم أدوات الزراعة -->
+        <section id="tools" class="category">
+            <div class="category-header">
+                <h2>أدوات الزراعة</h2>
+            </div>
+            
+            <div class="products">
+                <div class="product">
+                    <img src="https://via.placeholder.com/300x200?text=أسمدة" alt="أسمدة">
+                    <div class="product-info">
+                        <h3>أسمدة عضوية</h3>
+                        <p>لتعزيز نمو النباتات</p>
+                        <div class="varieties">
+                            <strong>الأنواع المتاحة:</strong>
+                            <ul>
+                                <li>سماد دودي</li>
+                                <li>كمبوست</li>
+                                <li>سماد بلدي</li>
+                            </ul>
+                        </div>
+                        <div class="price">السعر: 30 د ج للكيس</div>
+                        <button onclick="showOrderForm('أسمدة عضوية', 30)">اطلب الآن</button>
+                    </div>
+                </div>
+                
+                <div class="product">
+                    <img src="https://via.placeholder.com/300x200?text=أدوات+تقليم" alt="أدوات تقليم">
+                    <div class="product-info">
+                        <h3>أدوات تقليم</h3>
+                        <p>مجموعة متكاملة للعناية بالنباتات</p>
+                        <div class="price">السعر: 120 د ج للمجموعة</div>
+                        <button onclick="showOrderForm('أدوات تقليم', 120)">اطلب الآن</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- نموذج الطلب -->
+        <div id="orderForm" class="order-form" style="display: none;">
+            <h2>نموذج طلب الشراء</h2>
+            <form id="orderFormElement" action="https://script.google.com/macros/s/YOUR_GOOGLE_SCRIPT_ID/exec" method="POST">
+                <input type="hidden" id="selectedProduct" name="product">
+                <input type="hidden" id="selectedPrice" name="price">
+                
+                <div class="form-group">
+                    <label for="name">الاسم الكامل:</label>
+                    <input type="text" id="name" name="name" required>
+                </div>
+                <div class="form-group">
+                    <label for="phone">رقم الهاتف:</label>
+                    <input type="tel" id="phone" name="phone" required>
+                </div>
+                <div class="form-group">
+                    <label for="email">البريد الإلكتروني:</label>
+                    <input type="email" id="email" name="email">
+                </div>
+                <div class="form-group">
+                    <label for="address">عنوان التوصيل:</label>
+                    <textarea id="address" name="address" rows="3" required></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="quantity">الكمية:</label>
+                    <input type="number" id="quantity" name="quantity" min="1" value="1" required>
+                </div>
+                <div class="form-group">
+                    <label for="notes">ملاحظات إضافية:</label>
+                    <textarea id="notes" name="notes" rows="3"></textarea>
+                </div>
+                <button type="submit">إرسال الطلب</button>
+                <button type="button" onclick="document.getElementById('orderForm').style.display='none'" style="background-color: #ccc; margin-right: 10px;">إلغاء</button>
+            </form>
+        </div>
+    </div>
+
+    <footer id="contact">
+        <h3>اتصل بنا</h3>
+        <p>هاتف: 0123456789 | البريد الإلكتروني: info@nabatati.com</p>
+        <p>جميع الحقوق محفوظة &copy; 2023 متجر نباتاتي</p>
+    </footer>
+
+    <script>
+        // فتح تبويبات الأقسام
+        function openTab(evt, tabName) {
+            const tabContents = document.getElementsByClassName("tab-content");
+            for (let i = 0; i < tabContents.length; i++) {
+                tabContents[i].classList.remove("active");
+            }
+            
+            const tabs = document.getElementsByClassName("tab");
+            for (let i = 0; i < tabs.length; i++) {
+                tabs[i].classList.remove("active");
+            }
+            
+            document.getElementById(tabName).classList.add("active");
+            evt.currentTarget.classList.add("active");
+        }
+        
+        // عرض نموذج الطلب مع تعبئة المنتج المحدد
+        function showOrderForm(productName, productPrice) {
+            document.getElementById('selectedProduct').value = productName;
+            document.getElementById('selectedPrice').value = productPrice;
+            document.getElementById('orderForm').style.display = 'block';
+            window.scrollTo({
+                top: document.getElementById('orderForm').offsetTop,
+                behavior: 'smooth'
+            });
+        }
+        
+        // إرسال النموذج إلى جوجل شيت
+        document.getElementById('orderFormElement').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            fetch(this.action, {
+                method: 'POST',
+                body: new FormData(this),
+            })
+            .then(response => {
+                if (response.ok) {
+                    alert('تم إرسال طلبك بنجاح! سنتصل بك قريباً.');
+                    this.reset();
+                    document.getElementById('orderForm').style.display = 'none';
+                } else {
+                    throw new Error('حدث خطأ أثناء إرسال الطلب.');
+                }
+            })
+            .catch(error => {
+                alert(error.message);
+            });
+        });
+        
+        // التنقل السلس عند النقر على روابط القائمة
+        document.querySelectorAll('nav a').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                const targetId = this.getAttribute('href');
+                document.querySelector(targetId).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+    </script>
+</body>
+</html>
