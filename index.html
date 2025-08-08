@@ -81,6 +81,8 @@
             border-radius: 8px;
             overflow: hidden;
             transition: transform 0.3s, box-shadow 0.3s;
+            display: flex;
+            flex-direction: column;
         }
         .product:hover {
             transform: translateY(-5px);
@@ -93,6 +95,9 @@
         }
         .product-info {
             padding: 15px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
         }
         .price {
             font-weight: bold;
@@ -104,6 +109,7 @@
             margin-top: 10px;
             font-size: 0.9em;
             color: #666;
+            flex: 1;
         }
         .varieties ul {
             padding-right: 15px;
@@ -156,6 +162,8 @@
             display: flex;
             margin-bottom: 20px;
             border-bottom: 1px solid #ddd;
+            overflow-x: auto;
+            white-space: nowrap;
         }
         .tab {
             padding: 10px 20px;
@@ -238,10 +246,16 @@
         .cancel-btn:hover {
             background-color: #aaa !important;
         }
+        .cart-btn {
+            background-color: var(--dark-color);
+            margin-top: auto;
+        }
+        .cart-btn:hover {
+            background-color: #1565c0;
+        }
+        
+        /* تحسينات للهواتف المحمولة */
         @media (max-width: 768px) {
-            .products {
-                grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-            }
             nav ul {
                 flex-direction: column;
                 align-items: center;
@@ -253,7 +267,143 @@
                 flex-direction: column;
                 gap: 0;
             }
+            .products {
+                grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            }
+            .tabs {
+                padding-bottom: 5px;
+            }
+            .tab {
+                padding: 8px 15px;
+                font-size: 14px;
+            }
+            .product img {
+                height: 150px;
+            }
+            .search-container {
+                margin: 10px auto;
+            }
+            .container {
+                padding: 10px;
+            }
+            .category {
+                padding: 10px;
+            }
         }
+        
+        @media (max-width: 480px) {
+            .products {
+                grid-template-columns: 1fr;
+            }
+            header h1 {
+                font-size: 24px;
+            }
+            header p {
+                font-size: 14px;
+            }
+            .search-container input {
+                padding: 8px 12px;
+            }
+            .product-info h3 {
+                font-size: 18px;
+            }
+            .price {
+                font-size: 16px;
+            }
+        }
+        .order-items {
+            margin: 20px 0;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        
+        .order-items table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        .order-items th, .order-items td {
+            padding: 12px 15px;
+            text-align: right;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        .order-items th {
+            background-color: var(--light-color);
+            font-weight: bold;
+        }
+        
+        .order-items tr:last-child td {
+            border-bottom: none;
+        }
+        
+        .remove-item {
+            color: #f44336;
+            cursor: pointer;
+            font-size: 18px;
+        }
+        
+        .order-summary {
+            background-color: var(--light-color);
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 20px;
+        }
+        
+        .summary-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+        
+        .summary-row.total {
+            font-weight: bold;
+            font-size: 1.1em;
+            border-top: 1px solid #ddd;
+            padding-top: 10px;
+            margin-top: 10px;
+        }
+        
+        .delivery-options {
+            display: flex;
+            gap: 15px;
+            margin: 15px 0;
+        }
+        
+        .delivery-option {
+            flex: 1;
+            border: 1px solid #ddd;
+            padding: 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .delivery-option.selected {
+            border-color: var(--primary-color);
+            background-color: rgba(46, 125, 50, 0.1);
+        }
+        
+        .delivery-option input {
+            display: none;
+        }
+        
+        .additional-info textarea {
+            min-height: 100px;
+        }
+        
+        @media (max-width: 768px) {
+            .order-items th, .order-items td {
+                padding: 8px 10px;
+                font-size: 14px;
+            }
+            
+            .delivery-options {
+                flex-direction: column;
+            }
+        }
+    </style>
     </style>
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
@@ -300,36 +450,36 @@
       <div class="product">
         <img src="https://quran-m.com/wp-content/uploads/2019/12/images-10-2.jpg" alt="زيتون زيت">
         <div class="product-info">
-          <h3>زيتون للإنتاج الزيتي</h3>
+          <h3>زيتون لإنتاج الزيت</h3>
           <p>صنف ممتاز للإنتاج الزيوت</p>
           <div class="varieties">
             <strong>الأصناف المتاحة:</strong>
             <ul>
-              <li>شملال</li>
-              <li>سيقواز</li>
-              <li>بيكوال</li>
-              <li>ملكة العرب</li>
+              <li>شملال - 60 د ج</li>
+              <li>سيقواز - 65 د ج</li>
+              <li>بيكوال - 70 د ج</li>
+              <li>ملكة العرب - 75 د ج</li>
             </ul>
           </div>
-          <div class="price">سعر الشتلة: 60 د ج</div>
-          <button onclick="showOrderForm('زيتون الزيت', 60)">اطلب الآن</button>
+          <div class="price">تبدأ الأسعار من: 60 د ج</div>
+          <button class="cart-btn" onclick="showOrderForm('زيتون الزيت', 60)"><i class="fas fa-cart-plus"></i> أضف للسلة</button>
         </div>
       </div>
   
       <div class="product">
-        <img src="https://www.emaratalyoum.com/polopoly_fs/1.952506.1481449569!/image/image.jpg" alt="زيتون للإنتاج الزيتي والتريقد">
+        <img src="https://www.emaratalyoum.com/polopoly_fs/1.952506.1481449569!/image/image.jpg" alt="زيتون للإنتاج الزيت والتريقد">
         <div class="product-info">
-          <h3>زيتون للإنتاج الزيتي والتريقد</h3>
+          <h3>زيتون للإنتاج الزيت والتريقد</h3>
           <p>من أفضل الأصناف الترقيد</p>
           <div class="varieties">
             <strong>الأصناف المتاحة:</strong>
             <ul>
-              <li>فركاني</li>
-              <li>البيكوال</li>
+              <li>فركاني - 55 د ج</li>
+              <li>البيكوال - 60 د ج</li>
             </ul>
           </div>
-          <div class="price">سعر الشتلة: 55 د ج</div>
-          <button onclick="showOrderForm('زيتون للإنتاج الزيتي والتريقد', 55)">اطلب الآن</button>
+          <div class="price">تبدأ الأسعار من: 55 د ج</div>
+          <button class="cart-btn" onclick="showOrderForm('زيتون للإنتاج الزيتي والتريقد', 55)"><i class="fas fa-cart-plus"></i> أضف للسلة</button>
         </div>
       </div>
   
@@ -341,13 +491,13 @@
           <div class="varieties">
             <strong>الأصناف المتاحة:</strong>
             <ul>
-              <li>فركاني</li>
-              <li>البيكوال</li>
-              <li>شملال</li>
+              <li>فركاني - 65 د ج</li>
+              <li>البيكوال - 70 د ج</li>
+              <li>شملال - 75 د ج</li>
             </ul>
           </div>
-          <div class="price">سعر الشتلة: 65 د ج</div>
-          <button onclick="showOrderForm('زيتون التخليل والزيت', 65)">اطلب الآن</button>
+          <div class="price">تبدأ الأسعار من: 65 د ج</div>
+          <button class="cart-btn" onclick="showOrderForm('زيتون التخليل والزيت', 65)"><i class="fas fa-cart-plus"></i> أضف للسلة</button>
         </div>
       </div>
     </div>
@@ -364,12 +514,12 @@
           <div class="varieties">
             <strong>الأصناف المتاحة:</strong>
             <ul>
-              <li>طامسون</li>
-              <li>بالنسي</li>
+              <li>طامسون - 45 د ج</li>
+              <li>بالنسي - 50 د ج</li>
             </ul>
           </div>
-          <div class="price">سعر الشتلة: 45 د ج</div>
-          <button onclick="showOrderForm('برتقال', 45)">اطلب الآن</button>
+          <div class="price">تبدأ الأسعار من: 45 د ج</div>
+          <button class="cart-btn" onclick="showOrderForm('برتقال', 45)"><i class="fas fa-cart-plus"></i> أضف للسلة</button>
         </div>
       </div>
   
@@ -381,13 +531,13 @@
           <div class="varieties">
             <strong>الأصناف المتاحة:</strong>
             <ul>
-              <li>بنزهير</li>
-              <li>04 فصول</li>
-              <li>ليمون أصفر</li>
+              <li>بنزهير - 50 د ج</li>
+              <li>04 فصول - 55 د ج</li>
+              <li>ليمون أصفر - 60 د ج</li>
             </ul>
           </div>
-          <div class="price">سعر الشتلة: 50 د ج</div>
-          <button onclick="showOrderForm('ليمون', 50)">اطلب الآن</button>
+          <div class="price">تبدأ الأسعار من: 50 د ج</div>
+          <button class="cart-btn" onclick="showOrderForm('ليمون', 50)"><i class="fas fa-cart-plus"></i> أضف للسلة</button>
         </div>
       </div>
   
@@ -399,13 +549,13 @@
           <div class="varieties">
             <strong>الأصناف المتاحة:</strong>
             <ul>
-              <li>مندرين</li>
-              <li>كليمونتين</li>
-              <li>مندرين قزمية</li>
+              <li>مندرين - 55 د ج</li>
+              <li>كليمونتين - 60 د ج</li>
+              <li>مندرين قزمية - 65 د ج</li>
             </ul>
           </div>
-          <div class="price">سعر الشتلة: 55 د ج</div>
-          <button onclick="showOrderForm('مندرين', 55)">اطلب الآن</button>
+          <div class="price">تبدأ الأسعار من: 55 د ج</div>
+          <button class="cart-btn" onclick="showOrderForm('مندرين', 55)"><i class="fas fa-cart-plus"></i> أضف للسلة</button>
         </div>
       </div>
     </div>
@@ -422,13 +572,13 @@
           <div class="varieties">
             <strong>الأصناف المتاحة:</strong>
             <ul>
-              <li>خوخ مبكر</li>
-              <li>خوخ كعب الغزال</li>
-              <li>خوخ أبيض</li>
+              <li>خوخ مبكر - 65 د ج</li>
+              <li>خوخ كعب الغزال - 70 د ج</li>
+              <li>خوخ أبيض - 75 د ج</li>
             </ul>
           </div>
-          <div class="price">سعر الشتلة: 65 د ج</div>
-          <button onclick="showOrderForm('خوخ', 65)">اطلب الآن</button>
+          <div class="price">تبدأ الأسعار من: 65 د ج</div>
+          <button class="cart-btn" onclick="showOrderForm('خوخ', 65)"><i class="fas fa-cart-plus"></i> أضف للسلة</button>
         </div>
       </div>
   
@@ -440,29 +590,29 @@
           <div class="varieties">
             <strong>الأصناف المتاحة:</strong>
             <ul>
-              <li>مشمش حلواني</li>
-              <li>مشمش كانينو</li>
+              <li>مشمش حلواني - 70 د ج</li>
+              <li>مشمش كانينو - 75 د ج</li>
             </ul>
           </div>
-          <div class="price">سعر الشتلة: 70 د ج</div>
-          <button onclick="showOrderForm('مشمش', 70)">اطلب الآن</button>
+          <div class="price">تبدأ الأسعار من: 70 د ج</div>
+          <button class="cart-btn" onclick="showOrderForm('مشمش', 70)"><i class="fas fa-cart-plus"></i> أضف للسلة</button>
         </div>
       </div>
   
       <div class="product">
         <img src="https://cdn.al-ain.com/lg/images/2021/6/07/173-103303-many-health-benefits-plums_700x400.jpg" alt="برقوق">
         <div class="product-info">
-          <h3>مشمش</h3>
-          <p>أشجار مشمش عالية الإنتاج</p>
+          <h3>برقوق</h3>
+          <p>أشجار برقوق عالية الإنتاج</p>
           <div class="varieties">
             <strong>الأصناف المتاحة:</strong>
             <ul>
-              <li>برقوق أصفر</li>
-              <li>برقوق أحمر</li>
+              <li>برقوق أصفر - 70 د ج</li>
+              <li>برقوق أحمر - 75 د ج</li>
             </ul>
           </div>
-          <div class="price">سعر الشتلة: 70 د ج</div>
-          <button onclick="showOrderForm('برقوق, 70)">اطلب الآن</button>
+          <div class="price">تبدأ الأسعار من: 70 د ج</div>
+          <button class="cart-btn" onclick="showOrderForm('برقوق', 70)"><i class="fas fa-cart-plus"></i> أضف للسلة</button>
         </div>
       </div>
 
@@ -474,13 +624,13 @@
           <div class="varieties">
             <strong>الأصناف المتاحة:</strong>
             <ul>
-              <li>رمان حلواني</li>
-              <li>رمان مانجولاتي</li>
-              <li>رمان بلدي</li>
+              <li>رمان حلواني - 60 د ج</li>
+              <li>رمان مانجولاتي - 65 د ج</li>
+              <li>رمان بلدي - 70 د ج</li>
             </ul>
           </div>
-          <div class="price">سعر الشتلة: 60 د ج</div>
-          <button onclick="showOrderForm('رمان', 60)">اطلب الآن</button>
+          <div class="price">تبدأ الأسعار من: 60 د ج</div>
+          <button class="cart-btn" onclick="showOrderForm('رمان', 60)"><i class="fas fa-cart-plus"></i> أضف للسلة</button>
         </div>
       </div>
     </div>
@@ -497,13 +647,13 @@
           <div class="varieties">
             <strong>الأصناف المتاحة:</strong>
             <ul>
-              <li>عنب أحمر</li>
-              <li>عنب أبيض</li>
-              <li>عنب أسود</li>
+              <li>عنب أحمر - 70 د ج</li>
+              <li>عنب أبيض - 75 د ج</li>
+              <li>عنب أسود - 80 د ج</li>
             </ul>
           </div>
-          <div class="price">سعر الشتلة: 70 د ج</div>
-          <button onclick="showOrderForm('عنب', 70)">اطلب الآن</button>
+          <div class="price">تبدأ الأسعار من: 70 د ج</div>
+          <button class="cart-btn" onclick="showOrderForm('عنب', 70)"><i class="fas fa-cart-plus"></i> أضف للسلة</button>
         </div>
       </div>
   
@@ -515,12 +665,12 @@
           <div class="varieties">
             <strong>الأصناف المتاحة:</strong>
             <ul>
-              <li>توت أسود</li>
-              <li>توت أبيض</li>
+              <li>توت أسود - 65 د ج</li>
+              <li>توت أبيض - 70 د ج</li>
             </ul>
           </div>
-          <div class="price">سعر الشتلة: 65 د ج</div>
-          <button onclick="showOrderForm('توت', 65)">اطلب الآن</button>
+          <div class="price">تبدأ الأسعار من: 65 د ج</div>
+          <button class="cart-btn" onclick="showOrderForm('توت', 65)"><i class="fas fa-cart-plus"></i> أضف للسلة</button>
         </div>
       </div>
   
@@ -532,12 +682,12 @@
           <div class="varieties">
             <strong>الأصناف المتاحة:</strong>
             <ul>
-              <li>تين أسود</li>
-              <li>تين أبيض</li>
+              <li>تين أسود - 65 د ج</li>
+              <li>تين أبيض - 70 د ج</li>
             </ul>
           </div>
-          <div class="price">سعر الشتلة: 65 د ج</div>
-          <button onclick="showOrderForm('تين', 65)">اطلب الآن</button>
+          <div class="price">تبدأ الأسعار من: 65 د ج</div>
+          <button class="cart-btn" onclick="showOrderForm('تين', 65)"><i class="fas fa-cart-plus"></i> أضف للسلة</button>
         </div>
       </div>
     </div>
@@ -566,13 +716,13 @@
                             <div class="varieties">
                                 <strong>الأصناف المتاحة:</strong>
                                 <ul>
-                                    <li>جوري أحمر</li>
-                                    <li>جوري وردي</li>
-                                    <li>جوري أبيض</li>
+                                    <li>جوري أحمر - 40 د ج</li>
+                                    <li>جوري وردي - 45 د ج</li>
+                                    <li>جوري أبيض - 50 د ج</li>
                                 </ul>
                             </div>
-                            <div class="price">سعر الشتلة: 40 د ج</div>
-                            <button onclick="showOrderForm('ورد جوري', 40)">اطلب الآن</button>
+                            <div class="price">تبدأ الأسعار من: 40 د ج</div>
+                            <button class="cart-btn" onclick="showOrderForm('ورد جوري', 40)"><i class="fas fa-cart-plus"></i> أضف للسلة</button>
                         </div>
                     </div>
                     
@@ -582,7 +732,7 @@
                             <h3>ورد فل</h3>
                             <p>رائحته فواحة وأزهاره بيضاء</p>
                             <div class="price">سعر الشتلة: 35 د ج</div>
-                            <button onclick="showOrderForm('ورد فل', 35)">اطلب الآن</button>
+                            <button class="cart-btn" onclick="showOrderForm('ورد فل', 35)"><i class="fas fa-cart-plus"></i> أضف للسلة</button>
                         </div>
                     </div>
                 </div>
@@ -598,13 +748,13 @@
                             <div class="varieties">
                                 <strong>الأصناف المتاحة:</strong>
                                 <ul>
-                                    <li>أقحوان أصفر</li>
-                                    <li>أقحوان أبيض</li>
-                                    <li>أقحوان بنفسجي</li>
+                                    <li>أقحوان أصفر - 25 د ج</li>
+                                    <li>أقحوان أبيض - 30 د ج</li>
+                                    <li>أقحوان بنفسجي - 35 د ج</li>
                                 </ul>
                             </div>
-                            <div class="price">سعر الشتلة: 25 د ج</div>
-                            <button onclick="showOrderForm('أقحوان', 25)">اطلب الآن</button>
+                            <div class="price">تبدأ الأسعار من: 25 د ج</div>
+                            <button class="cart-btn" onclick="showOrderForm('أقحوان', 25)"><i class="fas fa-cart-plus"></i> أضف للسلة</button>
                         </div>
                     </div>
                     
@@ -616,13 +766,13 @@
                             <div class="varieties">
                                 <strong>الأصناف المتاحة:</strong>
                                 <ul>
-                                    <li>بيتونيا حمراء</li>
-                                    <li>بيتونيا زهرية</li>
-                                    <li>بيتونيا بيضاء</li>
+                                    <li>بيتونيا حمراء - 20 د ج</li>
+                                    <li>بيتونيا زهرية - 25 د ج</li>
+                                    <li>بيتونيا بيضاء - 30 د ج</li>
                                 </ul>
                             </div>
-                            <div class="price">سعر الشتلة: 20 د ج</div>
-                            <button onclick="showOrderForm('بيتونيا', 20)">اطلب الآن</button>
+                            <div class="price">تبدأ الأسعار من: 20 د ج</div>
+                            <button class="cart-btn" onclick="showOrderForm('بيتونيا', 20)"><i class="fas fa-cart-plus"></i> أضف للسلة</button>
                         </div>
                     </div>
                 </div>
@@ -644,12 +794,12 @@
                         <div class="varieties">
                             <strong>الأصناف المتاحة:</strong>
                             <ul>
-                                <li>فيكس نتدا</li>
-                                <li>فيكس بنجامينا</li>
+                                <li>فيكس نتدا - 75 د ج</li>
+                                <li>فيكس بنجامينا - 80 د ج</li>
                             </ul>
                         </div>
-                        <div class="price">سعر الشتلة: 75 د ج</div>
-                        <button onclick="showOrderForm('فيكس', 75)">اطلب الآن</button>
+                        <div class="price">تبدأ الأسعار من: 75 د ج</div>
+                        <button class="cart-btn" onclick="showOrderForm('فيكس', 75)"><i class="fas fa-cart-plus"></i> أضف للسلة</button>
                     </div>
                 </div>
                 
@@ -661,13 +811,13 @@
                         <div class="varieties">
                             <strong>الأصناف المتاحة:</strong>
                             <ul>
-                                <li>ياسمين</li>
-                                <li>هيدرا</li>
-                                <li>كرمة</li>
+                                <li>ياسمين - 50 د ج</li>
+                                <li>هيدرا - 55 د ج</li>
+                                <li>كرمة - 60 د ج</li>
                             </ul>
                         </div>
-                        <div class="price">سعر الشتلة: 50 د ج</div>
-                        <button onclick="showOrderForm('نباتات متسلقة', 50)">اطلب الآن</button>
+                        <div class="price">تبدأ الأسعار من: 50 د ج</div>
+                        <button class="cart-btn" onclick="showOrderForm('نباتات متسلقة', 50)"><i class="fas fa-cart-plus"></i> أضف للسلة</button>
                     </div>
                 </div>
             </div>
@@ -694,13 +844,13 @@
                             <div class="varieties">
                                 <strong>الأصناف المتاحة:</strong>
                                 <ul>
-                                    <li>طماطم شيري</li>
-                                    <li>طماطم بلدي</li>
-                                    <li>طماطم هجين</li>
+                                    <li>طماطم شيري - 15 د ج</li>
+                                    <li>طماطم بلدي - 20 د ج</li>
+                                    <li>طماطم هجين - 25 د ج</li>
                                 </ul>
                             </div>
-                            <div class="price">سعر الكيس: 15 د ج</div>
-                            <button onclick="showOrderForm('بذور طماطم', 15)">اطلب الآن</button>
+                            <div class="price">تبدأ الأسعار من: 15 د ج</div>
+                            <button class="cart-btn" onclick="showOrderForm('بذور طماطم', 15)"><i class="fas fa-cart-plus"></i> أضف للسلة</button>
                         </div>
                     </div>
                     
@@ -710,7 +860,7 @@
                             <h3>بذور فلفل</h3>
                             <p>بذور فلفل حار وحلو</p>
                             <div class="price">سعر الكيس: 15 د ج</div>
-                            <button onclick="showOrderForm('بذور فلفل', 15)">اطلب الآن</button>
+                            <button class="cart-btn" onclick="showOrderForm('بذور فلفل', 15)"><i class="fas fa-cart-plus"></i> أضف للسلة</button>
                         </div>
                     </div>
                 </div>
@@ -724,7 +874,7 @@
                             <h3>شتلات طماطم</h3>
                             <p>شتلات جاهزة للزراعة</p>
                             <div class="price">سعر الشتلة: 25 د ج</div>
-                            <button onclick="showOrderForm('شتلات طماطم', 25)">اطلب الآن</button>
+                            <button class="cart-btn" onclick="showOrderForm('شتلات طماطم', 25)"><i class="fas fa-cart-plus"></i> أضف للسلة</button>
                         </div>
                     </div>
                     
@@ -734,7 +884,7 @@
                             <h3>شتلات فلفل</h3>
                             <p>شتلات فلفل حار وحلو</p>
                             <div class="price">سعر الشتلة: 25 د ج</div>
-                            <button onclick="showOrderForm('شتلات فلفل', 25)">اطلب الآن</button>
+                            <button class="cart-btn" onclick="showOrderForm('شتلات فلفل', 25)"><i class="fas fa-cart-plus"></i> أضف للسلة</button>
                         </div>
                     </div>
                 </div>
@@ -757,13 +907,13 @@
                         <div class="varieties">
                             <strong>الأنواع المتاحة:</strong>
                             <ul>
-                                <li>سماد دودي</li>
-                                <li>كمبوست</li>
-                                <li>سماد بلدي</li>
+                                <li>سماد دودي - 30 د ج</li>
+                                <li>كمبوست - 35 د ج</li>
+                                <li>سماد بلدي - 40 د ج</li>
                             </ul>
                         </div>
-                        <div class="price">السعر: 30 د ج للكيس</div>
-                        <button onclick="showOrderForm('أسمدة عضوية', 30)">اطلب الآن</button>
+                        <div class="price">تبدأ الأسعار من: 30 د ج</div>
+                        <button class="cart-btn" onclick="showOrderForm('أسمدة عضوية', 30)"><i class="fas fa-cart-plus"></i> أضف للسلة</button>
                     </div>
                 </div>
                 
@@ -773,7 +923,7 @@
                         <h3>أدوات تقليم</h3>
                         <p>مجموعة متكاملة للعناية بالنباتات</p>
                         <div class="price">السعر: 120 د ج للمجموعة</div>
-                        <button onclick="showOrderForm('أدوات تقليم', 120)">اطلب الآن</button>
+                        <button class="cart-btn" onclick="showOrderForm('أدوات تقليم', 120)"><i class="fas fa-cart-plus"></i> أضف للسلة</button>
                     </div>
                 </div>
             </div>
@@ -838,20 +988,23 @@
                 </div>
                 
                 <div class="form-actions">
-                    <button type="submit">إرسال الطلب</button>
-                    <button type="button" onclick="document.getElementById('orderForm').style.display='none'" class="cancel-btn">إلغاء</button>
+                    <button type="submit"><i class="fas fa-check"></i> تأكيد الطلب</button>
+                    <button type="button" onclick="document.getElementById('orderForm').style.display='none'" class="cancel-btn"><i class="fas fa-times"></i> إلغاء</button>
                 </div>
             </form>
         </div>
     </div>
 
+    <div id="map" style="height: 300px;"></div>
+<script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&callback=initMap"></script>
+
     <footer id="contact">
         <h3>اتصل بنا</h3>
         <p>هاتف: 0123456789 | البريد الإلكتروني: info@nabatati.com</p>
-        <p>جميع الحقوق محفوظة &copy; 2023 متجر نباتاتي</p>
+        <p>جميع الحقوق محفوظة &copy; 2023 مشتلة السلام</p>
     </footer>
 
-    <button id="backToTop" title="الرجوع للأعلى">↑</button>
+    <button id="backToTop" title="الرجوع للأعلى"><i class="fas fa-arrow-up"></i></button>
 
     <script>
         // فتح تبويبات الأقسام
@@ -936,6 +1089,7 @@
         function searchProducts() {
             const searchTerm = document.getElementById('searchInput').value.toLowerCase();
             const products = document.querySelectorAll('.product');
+            let found = false;
             
             products.forEach(product => {
                 const productName = product.querySelector('h3').textContent.toLowerCase();
@@ -943,6 +1097,7 @@
                 
                 if (productName.includes(searchTerm) || productDesc.includes(searchTerm)) {
                     product.style.display = 'block';
+                    found = true;
                     
                     // التمرير إلى القسم الذي يحتوي على المنتج
                     product.closest('.category').scrollIntoView({
@@ -952,12 +1107,24 @@
                     product.style.display = 'none';
                 }
             });
+            
+            if (!found) {
+                alert('لم يتم العثور على منتجات تطابق بحثك.');
+            }
         }
         
         // للبحث عند الضغط على Enter
         document.getElementById('searchInput').addEventListener('keyup', function(e) {
             if (e.key === 'Enter') {
                 searchProducts();
+            }
+        });
+        
+        // إغلاق نموذج الطلب عند النقر خارج النموذج
+        window.addEventListener('click', function(event) {
+            const orderForm = document.getElementById('orderForm');
+            if (event.target === orderForm) {
+                orderForm.style.display = 'none';
             }
         });
     </script>
