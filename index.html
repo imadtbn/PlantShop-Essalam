@@ -1022,7 +1022,7 @@
             </div>
         </section>
 
-  <!-- سلة المشتريات الكاملة -->
+<!-- سلة المشتريات الكاملة -->
 <div id="fullCart" class="order-form" style="display: none; font-family: Arial, sans-serif;">
     <h2 style="text-align:center; color:#006233;">🛒 سلة المشتريات</h2>
     
@@ -1049,27 +1049,15 @@
     </div>
 
     <div class="order-summary" style="margin-top: 20px; border-top: 2px solid #ddd; padding-top: 10px;">
-        <div class="summary-row" style="display:flex; justify-content:space-between; margin:5px 0;">
-            <span>المجموع الجزئي:</span>
-            <span id="subtotal">0 د ج</span>
-        </div>
-
-        <div class="summary-row" style="display:flex; justify-content:space-between; margin:5px 0;">
-            <span>تكاليف التوصيل:</span>
-            <select id="deliveryCost" style="padding:5px; border-radius:5px; border:1px solid #ccc;">
-                <option value="0">بدون توصيل</option>
-                <option value="200">200 د ج</option>
-                <option value="300">300 د ج</option>
-                <option value="500">500 د ج</option>
-            </select>
-        </div>
-
-        <div class="summary-row total" style="display:flex; justify-content:space-between; font-weight:bold; font-size:18px; color:#006233; margin-top:10px;">
+        <div class="summary-row" style="display:flex; justify-content:space-between; margin:5px 0; font-weight:bold; font-size:18px; color:#006233;">
             <span>المجموع الكلي:</span>
             <span id="total">0 د ج</span>
         </div>
     </div>
 </div>
+
+<!-- استدعاء أيقونات Font Awesome -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
 <script>
 // تحديث المجموع
@@ -1079,74 +1067,160 @@ function updateTotal() {
         const price = parseFloat(row.querySelector('.item-total').textContent);
         subtotal += price;
     });
-    document.getElementById('subtotal').textContent = subtotal + ' د ج';
-
-    let delivery = parseFloat(document.getElementById('deliveryCost').value);
-    let total = subtotal + delivery;
-    document.getElementById('total').textContent = total + ' د ج';
+    document.getElementById('total').textContent = subtotal + ' د ج';
 }
 
-// عند تغيير تكاليف التوصيل
-document.getElementById('deliveryCost').addEventListener('change', updateTotal);
+// إضافة زر الحذف بجانب كل منتج
+function addDeleteFunctionality() {
+    document.querySelectorAll('.delete-item').forEach(button => {
+        button.addEventListener('click', function() {
+            this.closest('tr').remove();
+            updateTotal();
+        });
+    });
+}
 
 // زر إفراغ السلة
 document.getElementById('clearCart').addEventListener('click', () => {
     document.getElementById('cartItems').innerHTML = '';
     updateTotal();
 });
+
+// مثال: إضافة منتج لاختبار الأيقونات
+function addSampleItem(name, type, qty, price) {
+    const row = document.createElement('tr');
+    let total = qty * price;
+    row.innerHTML = `
+        <td>${name}</td>
+        <td>${type}</td>
+        <td>${qty}</td>
+        <td>${price} د ج</td>
+        <td class="item-total">${total}</td>
+        <td><i class="fa-solid fa-trash delete-item" style="color:red; cursor:pointer;"></i></td>
+    `;
+    document.getElementById('cartItems').appendChild(row);
+    addDeleteFunctionality();
+    updateTotal();
+}
 </script>
 
-            <h3>معلومات الزبون</h3>
-            <form id="customerInfoForm">
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="customerName">الاسم الكامل:</label>
-                        <input type="text" id="customerName" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="customerPhone">رقم الهاتف:</label>
-                        <input type="tel" id="customerPhone" required>
-                    </div>
-                </div>
-
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="customerWilaya">الولاية:</label>
-                        <select id="customerWilaya" required>
-                            <option value="">-- اختر الولاية --</option>
-                            <option value="الجزائر">الجزائر</option>
-                            <option value="وهران">وهران</option>
-                            <!-- إضافة بقية الولايات -->
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label for="customerMunicipality">البلدية:</label>
-                        <input type="text" id="customerMunicipality" required>
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <label for="customerAddress">عنوان التوصيل التفصيلي:</label>
-                    <textarea id="customerAddress" rows="3" required></textarea>
-                </div>
-
-                <div class="form-group">
-                    <label for="customerNotes">ملاحظات إضافية:</label>
-                    <textarea id="customerNotes" rows="2"></textarea>
-                </div>
-
-                <div class="form-actions">
-                    <button type="button" onclick="submitOrder()" class="cart-btn"><i class="fas fa-check"></i> تأكيد الطلب</button>
-                    <button type="button" onclick="clearCart()" class="cancel-btn"><i class="fas fa-trash"></i> إفراغ السلة</button>
-                    <button type="button" onclick="closeFullCart()" class="cancel-btn"><i class="fas fa-times"></i> إغلاق</button>
-                </div>
-            </form>
+<h3 style="color:#006233; text-align:center;">📋 معلومات الزبون</h3>
+<form id="customerInfoForm" style="max-width:700px; margin:auto; font-family:Arial,sans-serif;">
+    
+    <div class="form-row" style="display:flex; gap:15px;">
+        <div class="form-group" style="flex:1;">
+            <label for="customerName">الاسم الكامل:</label>
+            <input type="text" id="customerName" required style="width:100%; padding:8px; border:1px solid #ccc; border-radius:5px;">
+        </div>
+        <div class="form-group" style="flex:1;">
+            <label for="customerPhone">رقم الهاتف:</label>
+            <input type="tel" id="customerPhone" required style="width:100%; padding:8px; border:1px solid #ccc; border-radius:5px;">
         </div>
     </div>
 
-    <div id="map" style="height: 300px;"></div>
-<script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&callback=initMap"></script>
+    <div class="form-row" style="display:flex; gap:15px; margin-top:10px;">
+        <div class="form-group" style="flex:1;">
+            <label for="customerWilaya">الولاية:</label>
+            <select id="customerWilaya" required style="width:100%; padding:8px; border:1px solid #ccc; border-radius:5px;">
+                <option value="">-- اختر الولاية --</option>
+                <option>أدرار</option>
+                <option>الشلف</option>
+                <option>الأغواط</option>
+                <option>أم البواقي</option>
+                <option>باتنة</option>
+                <option>بجاية</option>
+                <option>بسكرة</option>
+                <option>بشار</option>
+                <option>البليدة</option>
+                <option>البويرة</option>
+                <option>تمنراست</option>
+                <option>تبسة</option>
+                <option>تلمسان</option>
+                <option>تيارت</option>
+                <option>تيزي وزو</option>
+                <option>الجزائر</option>
+                <option>الجلفة</option>
+                <option>جيجل</option>
+                <option>سطيف</option>
+                <option>سعيدة</option>
+                <option>سكيكدة</option>
+                <option>سيدي بلعباس</option>
+                <option>عنابة</option>
+                <option>قالمة</option>
+                <option>قسنطينة</option>
+                <option>المدية</option>
+                <option>مستغانم</option>
+                <option>المسيلة</option>
+                <option>معسكر</option>
+                <option>ورقلة</option>
+                <option>وهران</option>
+                <option>البيض</option>
+                <option>إليزي</option>
+                <option>برج بوعريريج</option>
+                <option>بومرداس</option>
+                <option>الطارف</option>
+                <option>تندوف</option>
+                <option>تيسمسيلت</option>
+                <option>الوادي</option>
+                <option>خنشلة</option>
+                <option>سوق أهراس</option>
+                <option>تيبازة</option>
+                <option>ميلة</option>
+                <option>عين الدفلى</option>
+                <option>النعامة</option>
+                <option>عين تموشنت</option>
+                <option>غرداية</option>
+                <option>غليزان</option>
+            </select>
+        </div>
+        <div class="form-group" style="flex:1;">
+            <label for="customerMunicipality">البلدية:</label>
+            <input type="text" id="customerMunicipality" required style="width:100%; padding:8px; border:1px solid #ccc; border-radius:5px;">
+        </div>
+    </div>
 
+    <div class="form-group" style="margin-top:10px;">
+        <label for="customerAddress">عنوان التوصيل التفصيلي:</label>
+        <textarea id="customerAddress" rows="3" required style="width:100%; padding:8px; border:1px solid #ccc; border-radius:5px;"></textarea>
+    </div>
+
+    <div class="form-group">
+        <label for="customerNotes">ملاحظات إضافية:</label>
+        <textarea id="customerNotes" rows="2" style="width:100%; padding:8px; border:1px solid #ccc; border-radius:5px;"></textarea>
+    </div>
+
+    <div id="map" style="height: 300px; margin-top:10px; border-radius:8px; border:1px solid #ccc;"></div>
+
+    <div class="form-actions" style="margin-top:15px; display:flex; justify-content:space-between;">
+        <button type="button" onclick="submitOrder()" style="background-color:#28a745; color:white; padding:10px 15px; border:none; border-radius:5px; cursor:pointer;"><i class="fas fa-check"></i> تأكيد الطلب</button>
+        <button type="button" onclick="clearCart()" style="background-color:#dc3545; color:white; padding:10px 15px; border:none; border-radius:5px; cursor:pointer;"><i class="fas fa-trash"></i> إفراغ السلة</button>
+        <button type="button" onclick="closeFullCart()" style="background-color:#6c757d; color:white; padding:10px 15px; border:none; border-radius:5px; cursor:pointer;"><i class="fas fa-times"></i> إغلاق</button>
+    </div>
+</form>
+
+<!-- Google Map -->
+<script>
+function initMap() {
+    var map = new google.maps.Map(document.getElementById('map'), {
+        center: {lat: 36.7538, lng: 3.0588}, // الجزائر العاصمة
+        zoom: 6
+    });
+
+    var marker;
+
+    // تحديد الموقع عند النقر
+    map.addListener('click', function(event) {
+        if (marker) marker.setMap(null);
+        marker = new google.maps.Marker({
+            position: event.latLng,
+            map: map
+        });
+        document.getElementById('customerAddress').value = 
+            `إحداثيات: ${event.latLng.lat().toFixed(6)}, ${event.latLng.lng().toFixed(6)}`;
+    });
+}
+</script>
+<script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&callback=initMap" async defer></script>
 <footer id="contact" style="background-color: #006233; color: white; text-align: center; padding: 25px; font-family: Arial, sans-serif;">
     <h3 style="margin-bottom: 20px; font-size: 22px;">اتصل بنا</h3>
 
