@@ -1104,123 +1104,72 @@ function addSampleItem(name, type, qty, price) {
 }
 </script>
 
-<h3 style="color:#006233; text-align:center;">📋 معلومات الزبون</h3>
-<form id="customerInfoForm" style="max-width:700px; margin:auto; font-family:Arial,sans-serif;">
-    
-    <div class="form-row" style="display:flex; gap:15px;">
-        <div class="form-group" style="flex:1;">
-            <label for="customerName">الاسم الكامل:</label>
-            <input type="text" id="customerName" required style="width:100%; padding:8px; border:1px solid #ccc; border-radius:5px;">
+<!-- قسم معلومات الزبون -->
+<div id="customerInfoSection" style="display:none; margin-top:20px;">
+    <h3 style="color:#006233; text-align:center;">
+        <i class="fas fa-user"></i> معلومات الزبون
+    </h3>
+    <form id="customerInfoForm" style="max-width:700px; margin:auto; font-family:Arial,sans-serif;">
+        
+        <div class="form-row" style="display:flex; gap:15px;">
+            <div class="form-group" style="flex:1;">
+                <label for="customerName"><i class="fas fa-id-card"></i> الاسم الكامل:</label>
+                <input type="text" id="customerName" required style="width:100%; padding:8px; border:1px solid #ccc; border-radius:5px;">
+            </div>
+            <div class="form-group" style="flex:1;">
+                <label for="customerPhone"><i class="fas fa-phone"></i> رقم الهاتف:</label>
+                <input type="tel" id="customerPhone" required style="width:100%; padding:8px; border:1px solid #ccc; border-radius:5px;">
+            </div>
         </div>
-        <div class="form-group" style="flex:1;">
-            <label for="customerPhone">رقم الهاتف:</label>
-            <input type="tel" id="customerPhone" required style="width:100%; padding:8px; border:1px solid #ccc; border-radius:5px;">
+
+        <div class="form-row" style="display:flex; gap:15px; margin-top:10px;">
+            <div class="form-group" style="flex:1;">
+                <label for="customerWilaya"><i class="fas fa-map-marker-alt"></i> الولاية:</label>
+                <input type="text" id="customerWilaya" placeholder="أدخل الولاية" required style="width:100%; padding:8px; border:1px solid #ccc; border-radius:5px;">
+            </div>
+            <div class="form-group" style="flex:1;">
+                <label for="customerMunicipality"><i class="fas fa-city"></i> البلدية:</label>
+                <input type="text" id="customerMunicipality" required style="width:100%; padding:8px; border:1px solid #ccc; border-radius:5px;">
+            </div>
         </div>
-    </div>
 
-    <div class="form-row" style="display:flex; gap:15px; margin-top:10px;">
-        <div class="form-group" style="flex:1;">
-            <label for="customerWilaya">الولاية:</label>
-            <select id="customerWilaya" required style="width:100%; padding:8px; border:1px solid #ccc; border-radius:5px;">
-                <option value="">-- اختر الولاية --</option>
-                <option>أدرار</option>
-                <option>الشلف</option>
-                <option>الأغواط</option>
-                <option>أم البواقي</option>
-                <option>باتنة</option>
-                <option>بجاية</option>
-                <option>بسكرة</option>
-                <option>بشار</option>
-                <option>البليدة</option>
-                <option>البويرة</option>
-                <option>تمنراست</option>
-                <option>تبسة</option>
-                <option>تلمسان</option>
-                <option>تيارت</option>
-                <option>تيزي وزو</option>
-                <option>الجزائر</option>
-                <option>الجلفة</option>
-                <option>جيجل</option>
-                <option>سطيف</option>
-                <option>سعيدة</option>
-                <option>سكيكدة</option>
-                <option>سيدي بلعباس</option>
-                <option>عنابة</option>
-                <option>قالمة</option>
-                <option>قسنطينة</option>
-                <option>المدية</option>
-                <option>مستغانم</option>
-                <option>المسيلة</option>
-                <option>معسكر</option>
-                <option>ورقلة</option>
-                <option>وهران</option>
-                <option>البيض</option>
-                <option>إليزي</option>
-                <option>برج بوعريريج</option>
-                <option>بومرداس</option>
-                <option>الطارف</option>
-                <option>تندوف</option>
-                <option>تيسمسيلت</option>
-                <option>الوادي</option>
-                <option>خنشلة</option>
-                <option>سوق أهراس</option>
-                <option>تيبازة</option>
-                <option>ميلة</option>
-                <option>عين الدفلى</option>
-                <option>النعامة</option>
-                <option>عين تموشنت</option>
-                <option>غرداية</option>
-                <option>غليزان</option>
-            </select>
+        <div class="form-group" style="margin-top:10px;">
+            <label for="customerAddress"><i class="fas fa-home"></i> عنوان التوصيل التفصيلي:</label>
+            <textarea id="customerAddress" rows="3" required style="width:100%; padding:8px; border:1px solid #ccc; border-radius:5px;"></textarea>
         </div>
-        <div class="form-group" style="flex:1;">
-            <label for="customerMunicipality">البلدية:</label>
-            <input type="text" id="customerMunicipality" required style="width:100%; padding:8px; border:1px solid #ccc; border-radius:5px;">
+
+        <div class="form-group">
+            <label for="customerNotes"><i class="fas fa-pen"></i> ملاحظات إضافية:</label>
+            <textarea id="customerNotes" rows="2" style="width:100%; padding:8px; border:1px solid #ccc; border-radius:5px;"></textarea>
         </div>
-    </div>
 
-    <div class="form-group" style="margin-top:10px;">
-        <label for="customerAddress">عنوان التوصيل التفصيلي:</label>
-        <textarea id="customerAddress" rows="3" required style="width:100%; padding:8px; border:1px solid #ccc; border-radius:5px;"></textarea>
-    </div>
+        <div id="map" style="height: 300px; margin-top:10px; border-radius:8px; border:1px solid #ccc;"></div>
 
-    <div class="form-group">
-        <label for="customerNotes">ملاحظات إضافية:</label>
-        <textarea id="customerNotes" rows="2" style="width:100%; padding:8px; border:1px solid #ccc; border-radius:5px;"></textarea>
-    </div>
+        <div class="form-actions" style="margin-top:15px; display:flex; justify-content:space-between;">
+            <button type="button" onclick="submitOrder()" style="background-color:#28a745; color:white; padding:10px 15px; border:none; border-radius:5px; cursor:pointer;">
+                <i class="fas fa-check"></i> تأكيد الطلب
+            </button>
+            <button type="button" onclick="clearCart()" style="background-color:#dc3545; color:white; padding:10px 15px; border:none; border-radius:5px; cursor:pointer;">
+                <i class="fas fa-trash"></i> إفراغ السلة
+            </button>
+            <button type="button" onclick="closeFullCart()" style="background-color:#6c757d; color:white; padding:10px 15px; border:none; border-radius:5px; cursor:pointer;">
+                <i class="fas fa-times"></i> إغلاق
+            </button>
+        </div>
+    </form>
+</div>
 
-    <div id="map" style="height: 300px; margin-top:10px; border-radius:8px; border:1px solid #ccc;"></div>
-
-    <div class="form-actions" style="margin-top:15px; display:flex; justify-content:space-between;">
-        <button type="button" onclick="submitOrder()" style="background-color:#28a745; color:white; padding:10px 15px; border:none; border-radius:5px; cursor:pointer;"><i class="fas fa-check"></i> تأكيد الطلب</button>
-        <button type="button" onclick="clearCart()" style="background-color:#dc3545; color:white; padding:10px 15px; border:none; border-radius:5px; cursor:pointer;"><i class="fas fa-trash"></i> إفراغ السلة</button>
-        <button type="button" onclick="closeFullCart()" style="background-color:#6c757d; color:white; padding:10px 15px; border:none; border-radius:5px; cursor:pointer;"><i class="fas fa-times"></i> إغلاق</button>
-    </div>
-</form>
-
-<!-- Google Map -->
 <script>
-function initMap() {
-    var map = new google.maps.Map(document.getElementById('map'), {
-        center: {lat: 36.7538, lng: 3.0588}, // الجزائر العاصمة
-        zoom: 6
-    });
-
-    var marker;
-
-    // تحديد الموقع عند النقر
-    map.addListener('click', function(event) {
-        if (marker) marker.setMap(null);
-        marker = new google.maps.Marker({
-            position: event.latLng,
-            map: map
-        });
-        document.getElementById('customerAddress').value = 
-            `إحداثيات: ${event.latLng.lat().toFixed(6)}, ${event.latLng.lng().toFixed(6)}`;
-    });
-}
+    // إظهار وإخفاء قسم معلومات الزبون
+    function openCart() {
+        document.getElementById("customerInfoSection").style.display = "block";
+    }
+    function closeFullCart() {
+        document.getElementById("customerInfoSection").style.display = "none";
+        // هنا يمكنك إخفاء السلة أيضًا
+    }
 </script>
-<script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&callback=initMap" async defer></script>
+
 <footer id="contact" style="background-color: #006233; color: white; text-align: center; padding: 25px; font-family: Arial, sans-serif;">
     <h3 style="margin-bottom: 20px; font-size: 22px;">اتصل بنا</h3>
 
