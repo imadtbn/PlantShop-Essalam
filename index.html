@@ -474,10 +474,7 @@
                 <input type="text" id="searchInput" placeholder="ابحث عن منتج...">
                 <button onclick="searchProducts()"><i class="fas fa-search"></i></button>
             </div>
-  <a href="https://maps.app.goo.gl/vwdRQ8Jun1TDyk627" target="_blank" class="map-link">
-    <i class="fas fa-map-marker-alt"></i>
-    التوجّه إلى مشتل السلام
-  </a>            
+           
             <div class="cart-container">
                 <button onclick="showFullCart()" style="background-color: var(--dark-color); padding: 10px 15px; border-radius: 4px; color: white; border: none; cursor: pointer;">
                     <i class="fas fa-shopping-cart"></i> سلة المشتريات
@@ -1101,49 +1098,63 @@
     <div id="map" style="height: 300px;"></div>
 <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&callback=initMap"></script>
 
-<footer id="contact" style="background-color: #006233; color: white; text-align: center; padding: 20px; font-family: Arial, sans-serif;">
-    <h3 style="margin-bottom: 15px;">اتصل بنا</h3>
+<footer id="contact" style="background-color: #006233; color: white; text-align: center; padding: 25px; font-family: Arial, sans-serif;">
+    <h3 style="margin-bottom: 20px; font-size: 22px;">اتصل بنا</h3>
     
-    <p><i class="fas fa-map-marker-alt"></i>  الطريق الوطني رقم 24، سيباو - بغلية، ولاية بومرداس</p>
+    <!-- العنوان -->
+    <p style="margin: 8px 0;">
+        <i class="fas fa-map-marker-alt" style="color: #ffcc00;"></i>
+        الطريق الوطني رقم 24، سيباو - بغلية، ولاية بومرداس
+    </p>
     
-    <p>
-        <i class="fas fa-phone"></i> 
+    <!-- الهاتف + واتساب -->
+    <p style="margin: 8px 0;">
+        <i class="fas fa-phone" style="color: #ffcc00;"></i>
         <a href="tel:0559219855" style="color: white; text-decoration: none;">0559 219 855</a>
-        <a href="https://wa.me/213559219855" target="_blank" style="margin-left: 8px; color: #25D366; font-size: 18px;">
+        <a href="https://wa.me/213559219855" target="_blank" title="واتساب" style="margin-left: 8px; color: #25D366; font-size: 18px;">
             <i class="fab fa-whatsapp"></i>
         </a>
         /
         <a href="tel:0799686060" style="color: white; text-decoration: none;">0799 686 060</a>
-        <a href="https://wa.me/213799686060" target="_blank" style="margin-left: 8px; color: #25D366; font-size: 18px;">
+        <a href="https://wa.me/213799686060" target="_blank" title="واتساب" style="margin-left: 8px; color: #25D366; font-size: 18px;">
             <i class="fab fa-whatsapp"></i>
         </a>
     </p>
     
-    <p>
-        <i class="fas fa-envelope"></i> 
+    <!-- البريد الإلكتروني -->
+    <p style="margin: 8px 0;">
+        <i class="fas fa-envelope" style="color: #ffcc00;"></i>
         <a href="mailto:info@nabatati.com" style="color: white; text-decoration: none;">info@nabatati.com</a>
     </p>
     
-    <p><i class="fas fa-clock"></i> أوقات العمل: 08:00 صباحًا - 18:00 مساءً</p>
+    <!-- أوقات العمل -->
+    <p style="margin: 8px 0;">
+        <i class="fas fa-clock" style="color: #ffcc00;"></i>
+        أوقات العمل: 08:00 صباحًا - 18:00 مساءً
+    </p>
     
-    <p>
-        <i class="fas fa-globe"></i> 
-        <a href="https://nabatati.com" target="_blank" style="color: white; text-decoration: none;">https://imadtbn.github.io/PlantShop-Essalam/</a>
+    <!-- الموقع الإلكتروني -->
+    <p style="margin: 8px 0;">
+        <i class="fas fa-globe" style="color: #ffcc00;"></i>
+        <a href="https://imadtbn.github.io/PlantShop-Essalam/" target="_blank" style="color: white; text-decoration: none;">
+            www.nabatati.com
+        </a>
     </p>
 
+    <!-- رابط الخرائط -->
     <a href="https://maps.app.goo.gl/vwdRQ8Jun1TDyk627" target="_blank" 
-       style="display: inline-block; margin: 10px auto; padding: 10px 15px; background-color: #ffcc00; color: #006233; border-radius: 8px; text-decoration: none; font-weight: bold;">
+       style="display: inline-block; margin: 15px auto; padding: 10px 18px; background-color: #ffcc00; color: #006233; border-radius: 8px; text-decoration: none; font-weight: bold;">
         <i class="fas fa-map-marked-alt"></i> التوجّه إلى مشتلة السلام
     </a>
 
-    <p style="margin-top: 15px; font-size: 14px; color: #ddd;">
+    <!-- الحقوق -->
+    <p style="margin-top: 20px; font-size: 14px; color: #ddd;">
         جميع الحقوق محفوظة &copy; 2003 مشتلة السلام
     </p>
 </footer>
 
 <!-- استدعاء مكتبة الأيقونات -->
 <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
-
 
     <button id="backToTop" title="الرجوع للأعلى"><i class="fas fa-arrow-up"></i></button>
 
