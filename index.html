@@ -467,39 +467,44 @@
 </head>
 <body>
 
-    <header>
-        <h1>مشتلة السلام</h1>
- <p>أجود أنواع شتلات أشجار الفواكه والخضروات - ورود ، نبتات وأشجار تزيين الحدائق</p>
-        <div style="display: flex; justify-content: center; align-items: center; gap: 15px; flex-wrap: wrap;">
-            <div class="search-container">
-                <input type="text" id="searchInput" placeholder="ابحث عن منتج...">
-                <button onclick="searchProducts()"><i class="fas fa-search"></i></button>
-            </div>
-           
-            <div class="cart-container">
-                <button onclick="showFullCart()" style="background-color: var(--dark-color); padding: 10px 15px; border-radius: 4px; color: white; border: none; cursor: pointer;">
-                    <i class="fas fa-shopping-cart"></i> سلة المشتريات
-                    <span id="cartCount" style="background-color: var(--primary-color); padding: 2px 6px; border-radius: 50%; font-size: 12px;">0</span>
-                </button>
+   <header class="main-header">
+    <h1 class="site-title">مشتلة السلام</h1>
+    <p class="site-subtitle">أجود أنواع شتلات أشجار الفواكه والخضروات - ورود، نباتات وأشجار تزيين الحدائق</p>
 
-             
-                <div id="cartDropdown">
-                    <h4 style="margin-top: 0; border-bottom: 2px solid var(--light-color); padding-bottom: 10px;">سلة المشتريات</h4>
-                    <div id="dropdownCartItems">
-                        <p style="text-align: center; color: #666;">السلة فارغة</p>
+    <div class="header-actions">
+        <!-- البحث -->
+        <div class="search-container">
+            <input type="text" id="searchInput" placeholder="ابحث عن منتج...">
+            <button onclick="searchProducts()" aria-label="بحث">
+                <i class="fas fa-search"></i>
+            </button>
+        </div>
+
+        <!-- سلة المشتريات -->
+        <div class="cart-container">
+            <button class="cart-btn" onclick="showFullCart()">
+                <i class="fas fa-shopping-cart"></i> سلة المشتريات
+                <span id="cartCount" class="cart-count">0</span>
+            </button>
+
+            <div id="cartDropdown" class="cart-dropdown">
+                <h4>سلة المشتريات</h4>
+                <div id="dropdownCartItems">
+                    <p class="empty-cart">السلة فارغة</p>
+                </div>
+
+                <div class="cart-summary">
+                    <div class="cart-total">
+                        <strong>المجموع:</strong>
+                        <span id="dropdownSubtotal">0 د ج</span>
                     </div>
-                    
-                    <div class="cart-summary">
-                        <div style="display: flex; justify-content: space-between;">
-                            <strong>المجموع:</strong>
-                            <span id="dropdownSubtotal">0 د ج</span>
-                        </div>
-                        <button class="checkout-btn" onclick="showFullCart()">إتمام الشراء</button>
-                    </div>
+                    <button class="checkout-btn" onclick="showFullCart()">إتمام الشراء</button>
                 </div>
             </div>
         </div>
-    </header>
+    </div>
+</header>
+
 
     <nav>
         <ul>
