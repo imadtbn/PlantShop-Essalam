@@ -1056,54 +1056,6 @@
     </div>
 </div>
 
-<!-- استدعاء أيقونات Font Awesome -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-
-<script>
-// تحديث المجموع
-function updateTotal() {
-    let subtotal = 0;
-    document.querySelectorAll('#cartItems tr').forEach(row => {
-        const price = parseFloat(row.querySelector('.item-total').textContent);
-        subtotal += price;
-    });
-    document.getElementById('total').textContent = subtotal + ' د ج';
-}
-
-// إضافة زر الحذف بجانب كل منتج
-function addDeleteFunctionality() {
-    document.querySelectorAll('.delete-item').forEach(button => {
-        button.addEventListener('click', function() {
-            this.closest('tr').remove();
-            updateTotal();
-        });
-    });
-}
-
-// زر إفراغ السلة
-document.getElementById('clearCart').addEventListener('click', () => {
-    document.getElementById('cartItems').innerHTML = '';
-    updateTotal();
-});
-
-// مثال: إضافة منتج لاختبار الأيقونات
-function addSampleItem(name, type, qty, price) {
-    const row = document.createElement('tr');
-    let total = qty * price;
-    row.innerHTML = `
-        <td>${name}</td>
-        <td>${type}</td>
-        <td>${qty}</td>
-        <td>${price} د ج</td>
-        <td class="item-total">${total}</td>
-        <td><i class="fa-solid fa-trash delete-item" style="color:red; cursor:pointer;"></i></td>
-    `;
-    document.getElementById('cartItems').appendChild(row);
-    addDeleteFunctionality();
-    updateTotal();
-}
-</script>
-
 <!-- قسم معلومات الزبون -->
 <div id="customerInfoSection" style="display:none; margin-top:20px;">
     <h3 style="color:#006233; text-align:center;">
@@ -1169,6 +1121,53 @@ function addSampleItem(name, type, qty, price) {
         // هنا يمكنك إخفاء السلة أيضًا
     }
 </script>
+
+<script>
+// تحديث المجموع
+function updateTotal() {
+    let subtotal = 0;
+    document.querySelectorAll('#cartItems tr').forEach(row => {
+        const price = parseFloat(row.querySelector('.item-total').textContent);
+        subtotal += price;
+    });
+    document.getElementById('total').textContent = subtotal + ' د ج';
+}
+
+// إضافة زر الحذف بجانب كل منتج
+function addDeleteFunctionality() {
+    document.querySelectorAll('.delete-item').forEach(button => {
+        button.addEventListener('click', function() {
+            this.closest('tr').remove();
+            updateTotal();
+        });
+    });
+}
+
+// زر إفراغ السلة
+document.getElementById('clearCart').addEventListener('click', () => {
+    document.getElementById('cartItems').innerHTML = '';
+    updateTotal();
+});
+
+// مثال: إضافة منتج لاختبار الأيقونات
+function addSampleItem(name, type, qty, price) {
+    const row = document.createElement('tr');
+    let total = qty * price;
+    row.innerHTML = `
+        <td>${name}</td>
+        <td>${type}</td>
+        <td>${qty}</td>
+        <td>${price} د ج</td>
+        <td class="item-total">${total}</td>
+        <td><i class="fa-solid fa-trash delete-item" style="color:red; cursor:pointer;"></i></td>
+    `;
+    document.getElementById('cartItems').appendChild(row);
+    addDeleteFunctionality();
+    updateTotal();
+}
+</script>
+
+
 
 <footer id="contact" style="background-color: #006233; color: white; text-align: center; padding: 25px; font-family: Arial, sans-serif;">
     <h3 style="margin-bottom: 20px; font-size: 22px;">اتصل بنا</h3>
