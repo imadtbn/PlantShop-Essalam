@@ -1023,11 +1023,11 @@
         </section>
 
 <!-- سلة المشتريات الكاملة -->
-<div id="fullCart" class="order-form" style="display: none; font-family: Arial, sans-serif;">
+<div id="fullCart" class="order-form" style="font-family: Arial, sans-serif; max-width:900px; margin:auto;">
     <h2 style="text-align:center; color:#006233;">🛒 سلة المشتريات</h2>
-    
+
     <div class="order-items" style="overflow-x:auto;">
-        <table id="cartTable" style="width:100%; border-collapse: collapse; text-align: center;">
+        <table id="cartTable" style="width:100%; border-collapse: collapse; text-align: center; border:1px solid #ddd;">
             <thead style="background-color:#f0f0f0;">
                 <tr>
                     <th>الصنف</th>
@@ -1049,7 +1049,7 @@
     </div>
 
     <div class="order-summary" style="margin-top: 20px; border-top: 2px solid #ddd; padding-top: 10px;">
-        <div class="summary-row" style="display:flex; justify-content:space-between; margin:5px 0; font-weight:bold; font-size:18px; color:#006233;">
+        <div style="display:flex; justify-content:space-between; font-weight:bold; font-size:18px; color:#006233;">
             <span>المجموع الكلي:</span>
             <span id="total">0 د ج</span>
         </div>
@@ -1057,117 +1057,131 @@
 </div>
 
 <!-- قسم معلومات الزبون -->
-<div id="customerInfoSection" style="display:none; margin-top:20px;">
+<div id="customerInfoSection" style="margin-top:20px;">
     <h3 style="color:#006233; text-align:center;">
         <i class="fas fa-user"></i> معلومات الزبون
     </h3>
     <form id="customerInfoForm" style="max-width:700px; margin:auto; font-family:Arial,sans-serif;">
-        
-        <div class="form-row" style="display:flex; gap:15px;">
-            <div class="form-group" style="flex:1;">
+        <div style="display:flex; gap:15px;">
+            <div style="flex:1;">
                 <label for="customerName"><i class="fas fa-id-card"></i> الاسم الكامل:</label>
                 <input type="text" id="customerName" required style="width:100%; padding:8px; border:1px solid #ccc; border-radius:5px;">
             </div>
-            <div class="form-group" style="flex:1;">
+            <div style="flex:1;">
                 <label for="customerPhone"><i class="fas fa-phone"></i> رقم الهاتف:</label>
                 <input type="tel" id="customerPhone" required style="width:100%; padding:8px; border:1px solid #ccc; border-radius:5px;">
             </div>
         </div>
 
-        <div class="form-row" style="display:flex; gap:15px; margin-top:10px;">
-            <div class="form-group" style="flex:1;">
+        <div style="display:flex; gap:15px; margin-top:10px;">
+            <div style="flex:1;">
                 <label for="customerWilaya"><i class="fas fa-map-marker-alt"></i> الولاية:</label>
-                <input type="text" id="customerWilaya" placeholder="أدخل الولاية" required style="width:100%; padding:8px; border:1px solid #ccc; border-radius:5px;">
+                <input type="text" id="customerWilaya" required style="width:100%; padding:8px; border:1px solid #ccc; border-radius:5px;">
             </div>
-            <div class="form-group" style="flex:1;">
+            <div style="flex:1;">
                 <label for="customerMunicipality"><i class="fas fa-city"></i> البلدية:</label>
                 <input type="text" id="customerMunicipality" required style="width:100%; padding:8px; border:1px solid #ccc; border-radius:5px;">
             </div>
         </div>
 
-        <div class="form-group" style="margin-top:10px;">
-            <label for="customerAddress"><i class="fas fa-home"></i> عنوان التوصيل التفصيلي:</label>
+        <div style="margin-top:10px;">
+            <label for="customerAddress"><i class="fas fa-home"></i> عنوان التوصيل:</label>
             <textarea id="customerAddress" rows="3" required style="width:100%; padding:8px; border:1px solid #ccc; border-radius:5px;"></textarea>
         </div>
 
-        <div class="form-group">
+        <div>
             <label for="customerNotes"><i class="fas fa-pen"></i> ملاحظات إضافية:</label>
             <textarea id="customerNotes" rows="2" style="width:100%; padding:8px; border:1px solid #ccc; border-radius:5px;"></textarea>
         </div>
 
         <div id="map" style="height: 300px; margin-top:10px; border-radius:8px; border:1px solid #ccc;"></div>
 
-        <div class="form-actions" style="margin-top:15px; display:flex; justify-content:space-between;">
+        <div style="margin-top:15px; display:flex; justify-content:space-between;">
             <button type="button" onclick="submitOrder()" style="background-color:#28a745; color:white; padding:10px 15px; border:none; border-radius:5px; cursor:pointer;">
                 <i class="fas fa-check"></i> تأكيد الطلب
             </button>
-            <button type="button" onclick="clearCart()" style="background-color:#dc3545; color:white; padding:10px 15px; border:none; border-radius:5px; cursor:pointer;">
+            <button type="button" id="clearCartBtn" style="background-color:#dc3545; color:white; padding:10px 15px; border:none; border-radius:5px; cursor:pointer;">
                 <i class="fas fa-trash"></i> إفراغ السلة
-            </button>
-            <button type="button" onclick="closeFullCart()" style="background-color:#6c757d; color:white; padding:10px 15px; border:none; border-radius:5px; cursor:pointer;">
-                <i class="fas fa-times"></i> إغلاق
             </button>
         </div>
     </form>
 </div>
 
 <script>
-    // إظهار وإخفاء قسم معلومات الزبون
-    function openCart() {
-        document.getElementById("customerInfoSection").style.display = "block";
-    }
-    function closeFullCart() {
-        document.getElementById("customerInfoSection").style.display = "none";
-        // هنا يمكنك إخفاء السلة أيضًا
-    }
-</script>
-
-<script>
-// تحديث المجموع
 function updateTotal() {
     let subtotal = 0;
     document.querySelectorAll('#cartItems tr').forEach(row => {
-        const price = parseFloat(row.querySelector('.item-total').textContent);
-        subtotal += price;
+        let qty = parseInt(row.querySelector('.item-qty').value) || 0;
+        let price = parseFloat(row.querySelector('.item-price').dataset.price) || 0;
+        let total = qty * price;
+        row.querySelector('.item-total').textContent = total.toFixed(2);
+        subtotal += total;
     });
-    document.getElementById('total').textContent = subtotal + ' د ج';
+    document.getElementById('total').textContent = subtotal.toFixed(2) + ' د ج';
+    localStorage.setItem("cart", document.getElementById('cartItems').innerHTML);
+    addQuantityListeners();
+    addDeleteFunctionality();
 }
 
-// إضافة زر الحذف بجانب كل منتج
+function addQuantityListeners() {
+    document.querySelectorAll('.item-qty').forEach(input => {
+        input.onchange = updateTotal;
+    });
+}
+
 function addDeleteFunctionality() {
     document.querySelectorAll('.delete-item').forEach(button => {
-        button.addEventListener('click', function() {
-            this.closest('tr').remove();
-            updateTotal();
-        });
+        button.onclick = function() {
+            if (confirm("هل أنت متأكد أنك تريد حذف هذا المنتج؟")) {
+                this.closest('tr').remove();
+                updateTotal();
+            }
+        };
     });
 }
 
-// زر إفراغ السلة
-document.getElementById('clearCart').addEventListener('click', () => {
-    document.getElementById('cartItems').innerHTML = '';
-    updateTotal();
-});
+document.getElementById('clearCart').onclick = () => {
+    if (confirm("هل تريد إفراغ السلة بالكامل؟")) {
+        document.getElementById('cartItems').innerHTML = '';
+        updateTotal();
+    }
+};
 
-// مثال: إضافة منتج لاختبار الأيقونات
+document.getElementById('clearCartBtn').onclick = () => {
+    document.getElementById('clearCart').click();
+};
+
 function addSampleItem(name, type, qty, price) {
     const row = document.createElement('tr');
     let total = qty * price;
     row.innerHTML = `
         <td>${name}</td>
         <td>${type}</td>
-        <td>${qty}</td>
-        <td>${price} د ج</td>
-        <td class="item-total">${total}</td>
+        <td><input type="number" class="item-qty" value="${qty}" min="1" style="width:60px; text-align:center;"></td>
+        <td class="item-price" data-price="${price}">${price} د ج</td>
+        <td class="item-total">${total.toFixed(2)}</td>
         <td><i class="fa-solid fa-trash delete-item" style="color:red; cursor:pointer;"></i></td>
     `;
     document.getElementById('cartItems').appendChild(row);
+    addQuantityListeners();
     addDeleteFunctionality();
     updateTotal();
 }
+
+window.onload = function() {
+    let savedCart = localStorage.getItem("cart");
+    if (savedCart) {
+        document.getElementById('cartItems').innerHTML = savedCart;
+        addQuantityListeners();
+        addDeleteFunctionality();
+        updateTotal();
+    }
+};
+
+// منتجات تجريبية
+addSampleItem("شجرة زيتون", "مثمرة", 2, 1500);
+addSampleItem("عطر مسك", "50مل", 1, 1200);
 </script>
-
-
 
 <footer id="contact" style="background-color: #006233; color: white; text-align: center; padding: 25px; font-family: Arial, sans-serif;">
     <h3 style="margin-bottom: 20px; font-size: 22px;">اتصل بنا</h3>
@@ -1182,7 +1196,7 @@ function addSampleItem(name, type, qty, price) {
     <p style="margin: 8px 0;">
         <i class="fas fa-phone" style="color: #a8ffb0;"></i>
         <a href="tel:0559219855" style="color: white; text-decoration: none;">0559 219 855</a>
-        <a href="https://wa.me/213559219855" target="_blank" title="واتساب" style="margin-left: 8px; color: #25D366; font-size: 18px;">
+        <a href="https://wa.me/213559219855" target="_blank"  title="واتساب" style="margin-left: 8px; color: #25D366; font-size: 18px;">
             <i class="fab fa-whatsapp"></i>
         </a>
         /
