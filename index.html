@@ -1022,43 +1022,81 @@
             </div>
         </section>
 
-        <!-- سلة المشتريات الكاملة -->
-        <div id="fullCart" class="order-form" style="display: none;">
-            <h2>سلة المشتريات</h2>
-            <div class="order-items">
-                <table id="cartTable">
-                    <thead>
-                        <tr>
-                            <th>الصنف</th>
-                            <th>النوع</th>
-                            <th>الكمية</th>
-                            <th>السعر</th>
-                            <th>المجموع</th>
-                            <th>إجراء</th>
-                        </tr>
-                    </thead>
-                    <tbody id="cartItems">
-                        <!-- سيتم ملؤها بالجافاسكريبت -->
-                    </tbody>
-                </table>
-            </div>
+  <!-- سلة المشتريات الكاملة -->
+<div id="fullCart" class="order-form" style="display: none; font-family: Arial, sans-serif;">
+    <h2 style="text-align:center; color:#006233;">🛒 سلة المشتريات</h2>
+    
+    <div class="order-items" style="overflow-x:auto;">
+        <table id="cartTable" style="width:100%; border-collapse: collapse; text-align: center;">
+            <thead style="background-color:#f0f0f0;">
+                <tr>
+                    <th>الصنف</th>
+                    <th>النوع</th>
+                    <th>الكمية</th>
+                    <th>السعر</th>
+                    <th>المجموع</th>
+                    <th>إجراء</th>
+                </tr>
+            </thead>
+            <tbody id="cartItems">
+                <!-- يتم ملؤها بالجافاسكريبت -->
+            </tbody>
+        </table>
+    </div>
 
-            <div class="order-summary">
-                <div class="summary-row">
-                    <span>المجموع الجزئي:</span>
-                    <span id="subtotal">0 د ج</span>
-                </div>
-                <div class="summary-row">
-                    <span>تكاليف التوصيل:</span>
-                    <span id="deliveryCost">0 د ج</span>
-                </div>
-                <div class="summary-row total">
-                    <span>المجموع الكلي:</span>
-                    <span id="total">0 د ج</span>
-                </div>
-            </div>
+    <div style="margin-top: 15px; text-align: center;">
+        <button id="clearCart" style="background-color: #cc0000; color: white; padding: 8px 15px; border: none; border-radius: 5px; cursor: pointer;">🗑 إفراغ السلة</button>
+    </div>
 
-            <h3>معلومات العميل</h3>
+    <div class="order-summary" style="margin-top: 20px; border-top: 2px solid #ddd; padding-top: 10px;">
+        <div class="summary-row" style="display:flex; justify-content:space-between; margin:5px 0;">
+            <span>المجموع الجزئي:</span>
+            <span id="subtotal">0 د ج</span>
+        </div>
+
+        <div class="summary-row" style="display:flex; justify-content:space-between; margin:5px 0;">
+            <span>تكاليف التوصيل:</span>
+            <select id="deliveryCost" style="padding:5px; border-radius:5px; border:1px solid #ccc;">
+                <option value="0">بدون توصيل</option>
+                <option value="200">200 د ج</option>
+                <option value="300">300 د ج</option>
+                <option value="500">500 د ج</option>
+            </select>
+        </div>
+
+        <div class="summary-row total" style="display:flex; justify-content:space-between; font-weight:bold; font-size:18px; color:#006233; margin-top:10px;">
+            <span>المجموع الكلي:</span>
+            <span id="total">0 د ج</span>
+        </div>
+    </div>
+</div>
+
+<script>
+// تحديث المجموع
+function updateTotal() {
+    let subtotal = 0;
+    document.querySelectorAll('#cartItems tr').forEach(row => {
+        const price = parseFloat(row.querySelector('.item-total').textContent);
+        subtotal += price;
+    });
+    document.getElementById('subtotal').textContent = subtotal + ' د ج';
+
+    let delivery = parseFloat(document.getElementById('deliveryCost').value);
+    let total = subtotal + delivery;
+    document.getElementById('total').textContent = total + ' د ج';
+}
+
+// عند تغيير تكاليف التوصيل
+document.getElementById('deliveryCost').addEventListener('change', updateTotal);
+
+// زر إفراغ السلة
+document.getElementById('clearCart').addEventListener('click', () => {
+    document.getElementById('cartItems').innerHTML = '';
+    updateTotal();
+});
+</script>
+
+            <h3>معلومات الزبون</h3>
             <form id="customerInfoForm">
                 <div class="form-row">
                     <div class="form-group">
