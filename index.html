@@ -1088,347 +1088,144 @@
        JavaScript: منطق السلة، الفاتورة، الإرسال
        - اقرأ التعليقات داخل الكود لتعديل الرابط أو تغيير السلوك
        ====================== -->
-    <script>
-        /*****************************************************************
-         *  إعدادات مهمة:
-         *  - ضع رابط Google Apps Script Web App هنا بعد نشره:
-         *    مثال: const GOOGLE_SHEETS_WEBAPP_URL = 'https://script.google.com/macros/s/XXXXX/exec';
-         *
-         *  - إذا كنت تريد تعطيل الحفظ المحلي غير المرغوب به، عيّن ENABLE_PERSIST_CART = false
-         *****************************************************************/
-        const GOOGLE_SHEETS_WEBAPP_URL = 'https://script.google.com/macros/s/AKfycbzwgDo7n6mTLcovr9o093M_T4G0IQlXfRAatfk14HnZQThPjKdCtygbLkeuNOgK9ka6YA/exec';
-        const ENABLE_PERSIST_CART = true; // true => يخزن السلة في localStorage
+<script>
+/*****************************************************************
+ * إعدادات مهمة:
+ *****************************************************************/
+const GOOGLE_SHEETS_WEBAPP_URL = 'https://script.google.com/macros/s/AKfycbzwgDo7n6mTLcovr9o093M_T4G0IQlXfRAatfk14HnZQThPjKdCtygbLkeuNOgK9ka6YA/exec';
+const ENABLE_PERSIST_CART = true; 
 
-        // سلة محلية
-        let cart = [];
+let cart = [];
 
-        // عناصر DOM
-        const floatingCartBtn = document.getElementById('floatingCartBtn');
-        const cartCount = document.getElementById('cartCount');
-        const cartModal = document.getElementById('cartModal');
-        const invoiceRows = document.getElementById('invoiceRows');
-        const modalSubtotal = document.getElementById('modalSubtotal');
-        const modalTotal = document.getElementById('modalTotal');
-        const yearEl = document.getElementById('year');
+// عناصر DOM
+const floatingCartBtn = document.getElementById('floatingCartBtn');
+const cartCount = document.getElementById('cartCount');
+const cartModal = document.getElementById('cartModal');
+const invoiceRows = document.getElementById('invoiceRows');
+const modalSubtotal = document.getElementById('modalSubtotal');
+const modalTotal = document.getElementById('modalTotal');
+const yearEl = document.getElementById('year');
 
-        yearEl.textContent = new Date().getFullYear();
+yearEl.textContent = new Date().getFullYear();
 
-        // تهيئة: تحميل السلة من localStorage إن كان مفعلًا
-        window.addEventListener('DOMContentLoaded', () => {
-            if (ENABLE_PERSIST_CART) {
-                try {
-                    const saved = localStorage.getItem('nabatati_cart_v2');
-                    if (saved) cart = JSON.parse(saved) || [];
-                } catch (e) {
-                    cart = [];
-                }
-            }
-            updateCartCount();
-        });
+// تحميل السلة من التخزين المحلي
+window.addEventListener('DOMContentLoaded', () => {
+    if (ENABLE_PERSIST_CART) {
+        try {
+            const saved = localStorage.getItem('nabatati_cart_v2');
+            if (saved) cart = JSON.parse(saved) || [];
+        } catch (e) { cart = []; }
+    }
+    updateCartCount();
+});
 
-        // فتح/إغلاق مودال السلة
-        floatingCartBtn.addEventListener('click', openCartModal);
-        function openCartModal() {
-            updateInvoice();
-            cartModal.style.display = 'flex';
-            cartModal.setAttribute('aria-hidden', 'false');
-            document.body.style.overflow = 'hidden';
-        }
-        function closeCartModal() {
-            cartModal.style.display = 'none';
-            cartModal.setAttribute('aria-hidden', 'true');
-            document.body.style.overflow = '';
-        }
+// فتح/إغلاق المودال
+function openCartModal() {
+    updateInvoice();
+    cartModal.style.display = 'flex';
+    document.body.style.overflow = 'hidden';
+}
+function closeCartModal() {
+    cartModal.style.display = 'none';
+    document.body.style.overflow = '';
+}
+floatingCartBtn.addEventListener('click', () => {
+    updateInvoice();
+    openCartModal();
+});
 
-        // ======================
-        // عرض اختيار الصنف (variety) عندما يتوفر أكثر من صنف
-        // ======================
-        function showVarietySelection(productName, btn) {
-            const productEl = btn.closest('.product');
-            const varietyLis = productEl.querySelectorAll('.varieties ul li');
-            // إن وُجدت عناصر داخل ul -> استخراج الخيارات
-            if (varietyLis.length > 0) {
-                const options = Array.from(varietyLis).map(li => {
-                    const txt = li.textContent.trim();
-                    const parts = txt.split('-').map(s => s.trim());
-                    const name = parts[0] || txt;
-                    const priceMatch = parts[1] ? parts[1].match(/(\d+(\.\d+)?)/) : null;
-                    const price = priceMatch ? parseFloat(priceMatch[1]) : (parseFloat(productEl.dataset.price) || 0);
-                    return { name, price };
-                });
+// إضافة للسلة
+function addToCart(productName, variety = '', price = 0, qty = 1) {
+    const idx = cart.findIndex(i => i.productName === productName && i.variety === variety);
+    if (idx > -1) cart[idx].quantity += qty;
+    else cart.push({ productName, variety, price, quantity: qty });
+    persistCart();
+    updateCartCount();
+}
 
-                // بناء نافذة اختيار بسيطة (small modal)
-                const smallModal = document.createElement('div');
-                smallModal.style = "position:fixed; inset:0; display:flex; align-items:center; justify-content:center; z-index:1400; background:rgba(0,0,0,0.45);";
-                smallModal.innerHTML = `
-          <div role="dialog" aria-modal="true" style="background:#fff; padding:16px; border-radius:10px; width:320px; direction:rtl;">
-            <h4 style="margin:0 0 8px 0;">اختر الصنف — ${escapeHtml(productName)}</h4>
-            <div style="max-height:260px; overflow:auto; margin-bottom:8px;">
-              ${options.map((o, idx) => `
-                <label style="display:flex; align-items:center; gap:10px; padding:8px; border-radius:8px; cursor:pointer;">
-                  <input type="radio" name="varOpt" value="${idx}" ${idx === 0 ? 'checked' : ''}>
-                  <span style="flex:1;">${escapeHtml(o.name)}</span>
-                  <strong>${formatNumber(o.price)} دج</strong>
-                </label>
-              `).join('')}
-            </div>
-            <div style="display:flex; justify-content:flex-end; gap:8px;">
-              <button id="smallCancel" style="padding:8px 12px; border-radius:8px; border:none; background:#eee;">إلغاء</button>
-              <button id="smallAdd" style="padding:8px 12px; border-radius:8px; border:none; background:var(--primary); color:#fff;">إضافة</button>
-            </div>
-          </div>
-        `;
-                document.body.appendChild(smallModal);
-
-                document.getElementById('smallCancel').addEventListener('click', () => {
-                    document.body.removeChild(smallModal);
-                });
-                document.getElementById('smallAdd').addEventListener('click', () => {
-                    const sel = smallModal.querySelector('input[name="varOpt"]:checked');
-                    const idx = parseInt(sel.value);
-                    const opt = options[idx];
-                    addToCart(productName, opt.name, opt.price, 1);
-                    document.body.removeChild(smallModal);
-                });
-            } else {
-                // لا أصناف محددة -> استخدم data-price أو سعر افتراضي
-                const price = parseFloat(productEl.dataset.price) || 0;
-                addToCart(productName, '', price, 1);
-            }
-        }
-
-        // ======================
-        // إدارة السلة الأساسية: إضافة، حذف عنصر فردي، تحديث كمية
-        // ======================
-        function addToCart(productName, variety = '', price = 0, qty = 1) {
-            price = parseFloat(price) || 0;
-            qty = parseInt(qty) || 1;
-            // البحث عن عنصر مطابق
-            const idx = cart.findIndex(i => i.productName === productName && i.variety === variety);
-            if (idx > -1) {
-                cart[idx].quantity += qty;
-            } else {
-                cart.push({ productName, variety, price, quantity: qty });
-            }
-            persistCart();
-            updateCartCount();
-            animateCartBtn();
-        }
-
-        // حذف عنصر فردي من السلة (index هو فهرس العنصر في المصفوفة)
-        function removeFromCart(index) {
-            if (typeof index !== 'number' || index < 0 || index >= cart.length) return;
-            if (!confirm('هل تريد حذف هذا المنتج من السلة؟')) return;
+// حذف من السلة
+function removeFromCart(index) {
+    if (index >= 0 && index < cart.length) {
+        if (confirm('هل تريد حذف هذا المنتج؟')) {
             cart.splice(index, 1);
             persistCart();
             updateCartCount();
             updateInvoice();
         }
+    }
+}
 
-        // تغيير الكمية
-        function changeQty(index, value) {
-            const v = parseInt(value) || 1;
-            if (v < 1) return;
-            if (index < 0 || index >= cart.length) return;
-            cart[index].quantity = v;
-            persistCart();
-            updateCartCount();
-            updateInvoice();
-        }
+// تغيير الكمية
+function changeQty(index, value) {
+    const v = parseInt(value) || 1;
+    if (v > 0 && index >= 0 && index < cart.length) {
+        cart[index].quantity = v;
+        persistCart();
+        updateCartCount();
+        updateInvoice();
+    }
+}
 
-        // إفراغ السلة بكافة البنود
-        function clearCartConfirm() {
-            if (confirm('هل أنت متأكد من إفراغ سلة المشتريات؟')) {
-                cart = [];
-                persistCart();
-                updateCartCount();
-                updateInvoice();
-                closeCartModal();
-            }
-        }
-
-        // ======================
-        // تحديث واجهة الفاتورة (ملء الجدول، حساب المجاميع)
-        // ======================
-        function updateInvoice() {
-            invoiceRows.innerHTML = '';
-            if (cart.length === 0) {
-                invoiceRows.innerHTML = `<tr><td colspan="6" style="text-align:center; padding:18px; color:#777;">السلة فارغة</td></tr>`;
-                modalSubtotal.textContent = '0 دج';
-                modalTotal.textContent = '0 دج';
-                return;
-            }
-            let subtotal = 0;
-            cart.forEach((item, idx) => {
-                const unit = parseFloat(item.unitPrice || item.price || 0) || item.price || 0;
-                // في الكود نستخدم item.price كحقل موجود
-                const unitPrice = parseFloat(item.price || 0) || 0;
-                const qty = parseInt(item.quantity || 1);
-                const total = unitPrice * qty; // حساب المجموع لكل عنصر
-                subtotal += total;
-
-                const tr = document.createElement('tr');
-                tr.innerHTML = `
-          <td>${escapeHtml(item.productName)}</td>
-          <td>${escapeHtml(item.variety || '-')}</td>
-          <td>
-            <input type="number" min="1" value="${qty}" onchange="changeQty(${idx}, this.value)" style="width:70px; padding:6px; border-radius:6px; border:1px solid #e6e6e6;">
-          </td>
-          <td>${formatNumber(unitPrice)} دج</td>
-          <td>${formatNumber(total)} دج</td>
-          <td>
-            <button class="action-btn" style="background:#ffebee; color:var(--danger);" onclick="removeFromCart(${idx})" aria-label="حذف">
-              <i class="fas fa-trash"></i>
-            </button>
-          </td>
+// تحديث الجدول
+function updateInvoice() {
+    invoiceRows.innerHTML = '';
+    if (cart.length === 0) {
+        invoiceRows.innerHTML = `<tr><td colspan="6" style="text-align:center; padding:18px; color:#777;">السلة فارغة</td></tr>`;
+        modalSubtotal.textContent = modalTotal.textContent = '0 دج';
+        return;
+    }
+    let subtotal = 0;
+    cart.forEach((item, idx) => {
+        const unitPrice = parseFloat(item.price) || 0;
+        const qty = parseInt(item.quantity) || 1;
+        const total = unitPrice * qty;
+        subtotal += total;
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+            <td>${escapeHtml(item.productName)}</td>
+            <td>${escapeHtml(item.variety || '-')}</td>
+            <td><input type="number" min="1" value="${qty}" onchange="changeQty(${idx}, this.value)" style="width:70px;"></td>
+            <td>${formatNumber(unitPrice)} دج</td>
+            <td>${formatNumber(total)} دج</td>
+            <td><button onclick="removeFromCart(${idx})"><i class="fas fa-trash"></i></button></td>
         `;
-                invoiceRows.appendChild(tr);
-            });
+        invoiceRows.appendChild(tr);
+    });
+    modalSubtotal.textContent = `${formatNumber(subtotal)} دج`;
+    modalTotal.textContent = `${formatNumber(subtotal)} دج`;
+}
 
-            // نعرض المجاميع
-            modalSubtotal.textContent = `${formatNumber(subtotal)} دج`;
-            modalTotal.textContent = `${formatNumber(subtotal)} دج`; // لا توصيل
-        }
+// تحديث العداد
+function updateCartCount() {
+    const total = cart.reduce((s, i) => s + (parseInt(i.quantity) || 1), 0);
+    cartCount.textContent = total;
+}
 
-        // تحديث عداد السلة في زر السلة العائم
-        function updateCartCount() {
-            const total = cart.reduce((s, i) => s + (parseInt(i.quantity || 1)), 0);
-            cartCount.textContent = total;
-        }
+// حفظ السلة
+function persistCart() {
+    if (ENABLE_PERSIST_CART) {
+        try { localStorage.setItem('nabatati_cart_v2', JSON.stringify(cart)); } catch (e) {}
+    }
+}
 
-        // حركة صغيرة عند الإضافة
-        function animateCartBtn() {
-            floatingCartBtn.style.transform = 'scale(1.06)';
-            setTimeout(() => floatingCartBtn.style.transform = '', 150);
-        }
+// جمع بيانات الطلب
+function collectOrderData() {
+    const items = cart.map(i => ({
+        product: i.productName,
+        variety: i.variety || '',
+        qty: i.quantity || 1,
+        unitPrice: i.price || 0,
+        total: (parseFloat(i.price) || 0) * (parseInt(i.quantity) || 1)
+    }));
+    const subtotal = items.reduce((s, it) => s + (it.total || 0), 0);
+    const customer = {
+        name: document.getElementById('custName').value.trim(),
+        phone: document.getElementById('custPhone').value.trim(),
+        wilaya: document.getElementById('custWilaya').value.trim(),
+        municipality: document.getElementById('custMunicip').value.trim(),
+        address: document.getElementById('custAddress').value.trim(),
+        notes: document.getElementById('custNotes').value.tri
 
-        // حفظ السلة في التخزين المحلي
-        function persistCart() {
-            if (ENABLE_PERSIST_CART) {
-                try { localStorage.setItem('nabatati_cart_v2', JSON.stringify(cart)); } catch (e) { }
-            }
-        }
-
-        // ======================
-        // تأكيد الطلب محليًا و الإرسال إلى Google Sheets (Apps Script)
-        // ======================
-        function submitOrder() {
-            // تحقق بسيط من الحقول
-            const name = document.getElementById('custName').value.trim();
-            const phone = document.getElementById('custPhone').value.trim();
-            if (!name || !phone) {
-                alert('الرجاء تعبئة الاسم ورقم الهاتف قبل تأكيد الطلب.');
-                return;
-            }
-            alert('تم تأكيد الطلب محليًا. اضغط "إرسال إلى Google Sheets" لتخزين الطلب في الجدول.');
-        }
-
-        function collectOrderData() {
-            const items = cart.map(i => ({
-                product: i.productName,
-                variety: i.variety || '',
-                qty: i.quantity || 1,
-                unitPrice: i.price || 0,
-                total: (parseFloat(i.price || 0) * parseInt(i.quantity || 1))
-            }));
-            const subtotal = items.reduce((s, it) => s + (it.total || 0), 0);
-            const customer = {
-                name: document.getElementById('custName').value.trim(),
-                phone: document.getElementById('custPhone').value.trim(),
-                wilaya: document.getElementById('custWilaya').value.trim(),
-                municipality: document.getElementById('custMunicip').value.trim(),
-                address: document.getElementById('custAddress').value.trim(),
-                notes: document.getElementById('custNotes').value.trim(),
-            };
-            return {
-                date: new Date().toLocaleString(),
-                items,
-                subtotal,
-                total: subtotal,
-                customer
-            };
-        }
-
-        async function sendOrderToGoogleSheets() {
-            if (GOOGLE_SHEETS_WEBAPP_URL === 'REPLACE_WITH_YOUR_GOOGLE_APPS_SCRIPT_URL') {
-                alert('لم يتم إعداد رابط Google Sheets Web App. ضع رابطك في متغير GOOGLE_SHEETS_WEBAPP_URL داخل الكود.');
-                return;
-            }
-            if (cart.length === 0) {
-                alert('السلة فارغة. لا يوجد ما يُرسل.');
-                return;
-            }
-            const order = collectOrderData();
-
-            try {
-                const res = await fetch(GOOGLE_SHEETS_WEBAPP_URL, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(order)
-                });
-                const text = await res.text();
-                if (res.ok) {
-                    alert('تم إرسال الطلب بنجاح إلى Google Sheets.');
-                    // تنظيف بعد الإرسال
-                    cart = [];
-                    persistCart();
-                    updateCartCount();
-                    updateInvoice();
-                    // إعادة تعيين حقول النموذج
-                    document.getElementById('custName').value = '';
-                    document.getElementById('custPhone').value = '';
-                    document.getElementById('custWilaya').value = '';
-                    document.getElementById('custMunicip').value = '';
-                    document.getElementById('custAddress').value = '';
-                    document.getElementById('custNotes').value = '';
-                    closeCartModal();
-                } else {
-                    console.error('Google Script response:', res.status, text);
-                    alert('حدث خطأ أثناء الإرسال. راجع إعدادات Google Apps Script أو الكونسول لمزيد من التفاصيل.');
-                }
-            } catch (err) {
-                console.error(err);
-                alert('فشل التواصل مع Google Sheets. تحقق من رابط Web App وصلاحيات الوصول.');
-            }
-        }
-
-        // تنسيقات مساعدة
-        function formatNumber(n) {
-            return Number(n).toLocaleString('en-US');
-        }
-        function escapeHtml(unsafe) {
-            if (!unsafe && unsafe !== 0) return '';
-            return String(unsafe).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
-        }
-
-        // ربط التمرير السلس لعناصر التنقل
-        document.querySelectorAll('nav a').forEach(a => {
-            a.addEventListener('click', function (e) {
-                e.preventDefault();
-                const href = this.getAttribute('href');
-                if (document.querySelector(href)) {
-                    document.querySelector(href).scrollIntoView({ behavior: 'smooth', block: 'start' });
-                }
-            });
-        });
-
-        // إغلاق المودال بالنقر على الخلفية
-        document.getElementById('cartModal').addEventListener('click', function (e) {
-            if (e.target === this) closeCartModal();
-        });
-
-        // تحديث الفاتورة تلقائياً عند فتحها (إن لم يتم فتحها يحدّث العداد فقط)
-        function openCartAndUpdate() {
-            updateInvoice();
-            openCartModal();
-        }
-
-        // تعرض الفاتورة عند الضغط على زر السلة
-        floatingCartBtn.addEventListener('click', openCartAndUpdate);
-
-    // ملاحظة: بعض المتصفحات تمنع fetch إلى خدمات بدون https أو دون CORS مفعل.
-    // تأكد من نشر Google Apps Script كـ "Web app" وإعداد صلاحيات الوصول عند النشر.
-    </script>
-</body>
+            </body>
 
 </html>
