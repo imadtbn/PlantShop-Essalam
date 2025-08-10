@@ -1225,6 +1225,41 @@ function collectOrderData() {
         municipality: document.getElementById('custMunicip').value.trim(),
         address: document.getElementById('custAddress').value.trim(),
         notes: document.getElementById('custNotes').value.tri
+<script>
+function showVarietySelection(productName, btn) {
+    // إيجاد العنصر الأب (البطاقة)
+    const productCard = btn.closest('.product');
+    const varietiesList = productCard.querySelectorAll('.varieties li');
+
+    // إذا لا توجد أصناف فرعية، أضف المنتج مباشرة
+    if (!varietiesList.length) {
+        const price = productCard.dataset.price || 0;
+        addToCart(productName, '', price);
+        return;
+    }
+
+    // تجهيز قائمة الأصناف
+    let message = 'اختر الصنف:\n';
+    varietiesList.forEach((li, index) => {
+        message += `${index + 1}) ${li.textContent.trim()}\n`;
+    });
+
+    // إدخال الاختيار
+    const choice = prompt(message);
+    const index = parseInt(choice) - 1;
+
+    // إذا الاختيار صحيح
+    if (index >= 0 && index < varietiesList.length) {
+        const selectedText = varietiesList[index].textContent.trim();
+        const parts = selectedText.split('-');
+        const varietyName = parts[0] ? parts[0].trim() : '';
+        const priceMatch = selectedText.match(/(\d+)/);
+        const price = priceMatch ? parseFloat(priceMatch[1]) : (productCard.dataset.price || 0);
+
+        addToCart(productName, varietyName, price);
+    }
+}
+</script>
 
             </body>
 
