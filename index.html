@@ -1191,300 +1191,174 @@
        JavaScript: منطق السلة، الفاتورة، الإرسال
        ====================== -->
 <script>
-    /*****************************************************************
-     * إعدادات مهمة:
-     *****************************************************************/
-    const GOOGLE_SHEETS_WEBAPP_URL = 'https://script.google.com/macros/s/AKfycbzwgDo7n6mTLcovr9o093M_T4G0IQlXfRAatfk14HnZQThPjKdCtygbLkeuNOgK9ka6YA/exec';
-    const ENABLE_PERSIST_CART = true; 
+const GOOGLE_SHEETS_WEBAPP_URL = 'رابط_السكربت';
+const ENABLE_PERSIST_CART = true; 
+let cart = [];
 
-    let cart = [];
+// عناصر DOM
+const floatingCartBtn = document.getElementById('floatingCartBtn');
+const cartCount = document.getElementById('cartCount');
+const cartModal = document.getElementById('cartModal');
+const invoiceRows = document.getElementById('invoiceRows');
+const modalSubtotal = document.getElementById('modalSubtotal');
+const modalTotal = document.getElementById('modalTotal');
+const yearEl = document.getElementById('year');
+const searchInput = document.getElementById('search-input');
+const searchBtn = document.getElementById('search-btn');
+const noResults = document.getElementById('noResults');
 
-    // عناصر DOM
-    const floatingCartBtn = document.getElementById('floatingCartBtn');
-    const cartCount = document.getElementById('cartCount');
-    const cartModal = document.getElementById('cartModal');
-    const invoiceRows = document.getElementById('invoiceRows');
-    const modalSubtotal = document.getElementById('modalSubtotal');
-    const modalTotal = document.getElementById('modalTotal');
-    const yearEl = document.getElementById('year');
-    const searchInput = document.getElementById('search-input');
-    const searchBtn = document.getElementById('search-btn');
-    const noResults = document.getElementById('noResults');
+yearEl.textContent = new Date().getFullYear();
 
-    yearEl.textContent = new Date().getFullYear();
-
-    // تحميل السلة من التخزين المحلي
-    window.addEventListener('DOMContentLoaded', () => {
-        if (ENABLE_PERSIST_CART) {
-            try {
-                const saved = localStorage.getItem('nabatati_cart_v2');
-                if (saved) cart = JSON.parse(saved) || [];
-            } catch (e) { 
-                console.error('خطأ في تحميل السلة:', e);
-                cart = []; 
-            }
-        }
-        updateCartCount();
-    });
-
-    // فتح/إغلاق المودال
-    function openCartModal() {
-        updateInvoice();
-        cartModal.style.display = 'flex';
-        document.body.style.overflow = 'hidden';
+window.addEventListener('DOMContentLoaded', () => {
+    if (ENABLE_PERSIST_CART) {
+        const saved = localStorage.getItem('nabatati_cart_v2');
+        if (saved) cart = JSON.parse(saved) || [];
     }
+    updateCartCount();
+});
 
-    function closeCartModal() {
-        cartModal.style.display = 'none';
-        document.body.style.overflow = '';
-    }
+function openCartModal() {
+    updateInvoice();
+    cartModal.style.display = 'flex';
+}
+function closeCartModal() {
+    cartModal.style.display = 'none';
+}
+floatingCartBtn.addEventListener('click', openCartModal);
 
-    floatingCartBtn.addEventListener('click', openCartModal);
+function addToCart(productName, variety = '', price = 0, qty = 1) {
+    const idx = cart.findIndex(i => i.productName === productName && i.variety === variety);
+    if (idx > -1) cart[idx].quantity += qty;
+    else cart.push({ productName, variety, price, quantity: qty });
+    persistCart();
+    updateCartCount();
+}
 
-    // إضافة للسلة
-    function addToCart(productName, variety = '', price = 0, qty = 1) {
-        const idx = cart.findIndex(i => i.productName === productName && i.variety === variety);
-        if (idx > -1) {
-            cart[idx].quantity += qty;
-        } else {
-            cart.push({ productName, variety, price, quantity: qty });
-        }
+function removeFromCart(index) {
+    if (confirm('حذف المنتج؟')) {
+        cart.splice(index, 1);
         persistCart();
         updateCartCount();
-        showAddedToCartMessage(productName);
+        updateInvoice();
     }
+}
+function changeQty(index, value) {
+    cart[index].quantity = parseInt(value) || 1;
+    persistCart();
+    updateCartCount();
+    updateInvoice();
+}
 
-    function showAddedToCartMessage(productName) {
-        const msg = document.createElement('div');
-        msg.className = 'cart-notification';
-        msg.innerHTML = `تم إضافة ${escapeHtml(productName)} إلى السلة`;
-        document.body.appendChild(msg);
-        setTimeout(() => msg.remove(), 3000);
+function updateInvoice() {
+    invoiceRows.innerHTML = '';
+    if (cart.length === 0) {
+        invoiceRows.innerHTML = `<tr><td colspan="6" style="text-align:center">السلة فارغة</td></tr>`;
+        modalSubtotal.textContent = modalTotal.textContent = '0 دج';
+        return;
     }
-
-    // حذف من السلة
-    function removeFromCart(index) {
-        if (index >= 0 && index < cart.length) {
-            if (confirm('هل تريد حذف هذا المنتج؟')) {
-                cart.splice(index, 1);
-                persistCart();
-                updateCartCount();
-                updateInvoice();
-            }
-        }
-    }
-
-    // تغيير الكمية
-    function changeQty(index, value) {
-        const v = parseInt(value) || 1;
-        if (v > 0 && index >= 0 && index < cart.length) {
-            cart[index].quantity = v;
-            persistCart();
-            updateCartCount();
-            updateInvoice();
-        }
-    }
-
-    // تحديث الجدول
-    function updateInvoice() {
-        invoiceRows.innerHTML = '';
-        if (cart.length === 0) {
-            invoiceRows.innerHTML = `<tr><td colspan="6" style="text-align:center; padding:18px; color:#777;">السلة فارغة</td></tr>`;
-            modalSubtotal.textContent = modalTotal.textContent = '0 دج';
-            return;
-        }
-
-        let subtotal = 0;
-        cart.forEach((item, idx) => {
-            const unitPrice = parseFloat(item.price) || 0;
-            const qty = parseInt(item.quantity) || 1;
-            const total = unitPrice * qty;
-            subtotal += total;
-
-            const tr = document.createElement('tr');
-            tr.innerHTML = `
-                <td>${escapeHtml(item.productName)}</td>
-                <td>${escapeHtml(item.variety || '-')}</td>
-                <td><input type="number" min="1" value="${qty}" onchange="changeQty(${idx}, this.value)" style="width:70px;"></td>
-                <td>${formatNumber(unitPrice)} دج</td>
-                <td>${formatNumber(total)} دج</td>
-                <td><button onclick="removeFromCart(${idx})"><i class="fas fa-trash"></i></button></td>
-            `;
-            invoiceRows.appendChild(tr);
-        });
-
-        modalSubtotal.textContent = `${formatNumber(subtotal)} دج`;
-        modalTotal.textContent = `${formatNumber(subtotal)} دج`;
-    }
-
-    // تحديث العداد
-    function updateCartCount() {
-        const total = cart.reduce((s, i) => s + (parseInt(i.quantity) || 1), 0);
-        cartCount.textContent = total;
-        floatingCartBtn.classList.toggle('pulse', total > 0);
-    }
-
-    // حفظ السلة
-    function persistCart() {
-        if (ENABLE_PERSIST_CART) {
-            try { 
-                localStorage.setItem('nabatati_cart_v2', JSON.stringify(cart)); 
-            } catch (e) {
-                console.error('خطأ في حفظ السلة:', e);
-            }
-        }
-    }
-
-    // جمع بيانات الطلب
-    function collectOrderData() {
-        const items = cart.map(i => ({
+    let subtotal = 0;
+    cart.forEach((item, idx) => {
+        const unitPrice = parseFloat(item.price) || 0;
+        const qty = parseInt(item.quantity) || 1;
+        const total = unitPrice * qty;
+        subtotal += total;
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+            <td>${escapeHtml(item.productName)}</td>
+            <td>${escapeHtml(item.variety || '-')}</td>
+            <td><input type="number" min="1" value="${qty}" onchange="changeQty(${idx}, this.value)" style="width:70px;"></td>
+            <td>${toLatinNumbers(formatNumber(unitPrice))} دج</td>
+            <td>${toLatinNumbers(formatNumber(total))} دج</td>
+            <td><button onclick="removeFromCart(${idx})"><i class="fas fa-trash"></i></button></td>
+        `;
+        invoiceRows.appendChild(tr);
+    });
+    modalSubtotal.textContent = `${toLatinNumbers(formatNumber(subtotal))} دج`;
+    modalTotal.textContent = `${toLatinNumbers(formatNumber(subtotal))} دج`;
+}
+function updateCartCount() {
+    cartCount.textContent = cart.reduce((s, i) => s + (parseInt(i.quantity) || 1), 0);
+}
+function persistCart() {
+    if (ENABLE_PERSIST_CART) localStorage.setItem('nabatati_cart_v2', JSON.stringify(cart));
+}
+function collectOrderData() {
+    return {
+        items: cart.map(i => ({
             product: i.productName,
-            variety: i.variety || '',
-            qty: i.quantity || 1,
-            unitPrice: i.price || 0,
+            variety: i.variety,
+            qty: i.quantity,
+            unitPrice: i.price,
             total: (parseFloat(i.price) || 0) * (parseInt(i.quantity) || 1)
-        }));
-
-        const subtotal = items.reduce((s, it) => s + (it.total || 0), 0);
-        
-        const customer = {
+        })),
+        subtotal: cart.reduce((s, i) => s + ((parseFloat(i.price) || 0) * (parseInt(i.quantity) || 1)), 0),
+        customer: {
             name: document.getElementById('custName').value.trim(),
             phone: document.getElementById('custPhone').value.trim(),
             wilaya: document.getElementById('custWilaya').value.trim(),
             municipality: document.getElementById('custMunicip').value.trim(),
             address: document.getElementById('custAddress').value.trim(),
             notes: document.getElementById('custNotes').value.trim()
-        };
-
-        return { items, subtotal, customer };
+        }
+    };
+}
+function isValidPhone(phone) {
+    return /^0[5-7]\d{8}$/.test(phone);
+}
+async function sendOrderToGoogleSheets() {
+    const order = collectOrderData();
+    if (!order.customer.name || !order.customer.phone) return alert('الاسم ورقم الهاتف مطلوبان');
+    if (!isValidPhone(order.customer.phone)) return alert('رقم الهاتف غير صحيح');
+    if (order.items.length === 0) return alert('السلة فارغة');
+    const btn = document.getElementById('sendOrderBtn');
+    btn.disabled = true;
+    btn.innerHTML = 'جاري الإرسال...';
+    try {
+        await fetch(GOOGLE_SHEETS_WEBAPP_URL, {
+            method: 'POST', headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(order)
+        });
+        alert('تم إرسال الطلب بنجاح');
+        cart = [];
+        persistCart();
+        updateCartCount();
+        closeCartModal();
+    } catch {
+        alert('خطأ أثناء الإرسال');
+    } finally {
+        btn.disabled = false;
+        btn.innerHTML = 'إرسال الطلب';
     }
-
-    // التحقق من صحة رقم الهاتف
-    function isValidPhone(phone) {
-        return /^0[5-7]\d{8}$/.test(phone);
+}
+function clearCartConfirm() {
+    if (confirm('إفراغ السلة؟')) {
+        cart = [];
+        persistCart();
+        updateCartCount();
+        updateInvoice();
     }
-
-    // إرسال الطلب إلى Google Sheets
-    async function sendOrderToGoogleSheets() {
-        if (!navigator.onLine) {
-            alert('لا يوجد اتصال بالإنترنت! الرجاء المحاولة لاحقاً');
-            return;
-        }
-
-        const order = collectOrderData();
-        
-        if (!order.customer.name || !order.customer.phone) {
-            alert('الرجاء إدخال الاسم الكامل ورقم الهاتف');
-            return;
-        }
-        
-        if (!isValidPhone(order.customer.phone)) {
-            alert('رقم الهاتف يجب أن يبدأ بـ 05/06/07 ويتكون من 10 أرقام');
-            return;
-        }
-
-        if (order.items.length === 0) {
-            alert('السلة فارغة، الرجاء إضافة منتجات أولاً');
-            return;
-        }
-
-        const btn = document.getElementById('sendOrderBtn');
-        const originalText = btn.innerHTML;
-        btn.disabled = true;
-        btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> جاري الإرسال...';
-
-        try {
-            const response = await fetch(GOOGLE_SHEETS_WEBAPP_URL, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(order)
-            });
-
-            if (!response.ok) throw new Error('Network response was not ok');
-            
-            const data = await response.json();
-            
-            alert('تم إرسال طلبك بنجاح! سنتصل بك قريباً لتأكيد الطلب.');
-            cart = [];
-            persistCart();
-            updateCartCount();
-            closeCartModal();
-            
-            // إرسال رسالة واتساب (اختياري)
-            const whatsappMsg = `مرحباً، لقد قدمت طلباً جديداً. الاسم: ${order.customer.name}`;
-            window.open(`https://wa.me/213123456789?text=${encodeURIComponent(whatsappMsg)}`, '_blank');
-            
-        } catch (error) {
-            console.error('Error:', error);
-            alert('حدث خطأ أثناء إرسال الطلب. الرجاء المحاولة مرة أخرى.');
-        } finally {
-            btn.disabled = false;
-            btn.innerHTML = originalText;
-        }
-    }
-
-    // تأكيد إفراغ السلة
-    function clearCartConfirm() {
-        if (cart.length === 0) return;
-        if (confirm('هل أنت متأكد من إفراغ السلة بالكامل؟')) {
-            cart = [];
-            persistCart();
-            updateCartCount();
-            updateInvoice();
-        }
-    }
-
-   // عرض اختيار الأصناف
+}
 function showVarietySelection(productName, btnElement) {
     const productCard = btnElement.closest('.product');
     const varieties = productCard.querySelectorAll('.varieties li');
     const productType = productCard.dataset.type || '';
-
-    // إذا لم يكن هناك أصناف، أضف المنتج مباشرة
     if (varieties.length === 0) {
         const price = productCard.dataset.price || '0';
         addToCart(productName, '', price, 1, productType);
         return;
     }
-
-    // إنشاء نافذة المودال
     let modal = document.createElement('div');
-    modal.style.position = 'fixed';
-    modal.style.top = '0';
-    modal.style.left = '0';
-    modal.style.width = '100%';
-    modal.style.height = '100%';
-    modal.style.background = 'rgba(0,0,0,0.5)';
-    modal.style.display = 'flex';
-    modal.style.alignItems = 'center';
-    modal.style.justifyContent = 'center';
-    modal.style.zIndex = '9999';
-
+    modal.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);display:flex;align-items:center;justify-content:center;z-index:9999';
     let box = document.createElement('div');
-    box.style.background = '#fff';
-    box.style.padding = '20px';
-    box.style.borderRadius = '8px';
-    box.style.minWidth = '250px';
-
-    let label = document.createElement('label');
-    label.textContent = 'اختر الصنف:';
-    box.appendChild(label);
-
-    // قائمة الأصناف
+    box.style.cssText = 'background:#fff;padding:20px;border-radius:8px;min-width:250px';
     let select = document.createElement('select');
-    select.style.display = 'block';
-    select.style.margin = '10px 0';
     varieties.forEach(li => {
         let opt = document.createElement('option');
         opt.textContent = li.textContent.trim();
         select.appendChild(opt);
     });
-    box.appendChild(select);
-
-    // زر التأكيد
     let confirmBtn = document.createElement('button');
     confirmBtn.textContent = 'تأكيد';
-    confirmBtn.className = 'btn primary';
     confirmBtn.onclick = () => {
         const selectedText = select.value;
         const priceMatch = selectedText.match(/(\d+)\s*دج/);
@@ -1493,87 +1367,58 @@ function showVarietySelection(productName, btnElement) {
         addToCart(productName, variety, price, 1, productType);
         document.body.removeChild(modal);
     };
-    box.appendChild(confirmBtn);
-
-    // زر الإلغاء
     let cancelBtn = document.createElement('button');
     cancelBtn.textContent = 'إلغاء';
-    cancelBtn.className = 'btn secondary';
-    cancelBtn.style.marginRight = '10px';
     cancelBtn.onclick = () => document.body.removeChild(modal);
+    box.appendChild(select);
+    box.appendChild(confirmBtn);
     box.appendChild(cancelBtn);
-
     modal.appendChild(box);
     document.body.appendChild(modal);
 }
-
-    // وظيفة البحث المحسنة
-    let searchTimer;
-    function performSearch() {
-        const searchTerm = searchInput.value.trim().toLowerCase();
-        const products = document.querySelectorAll('.product');
-        let hasResults = false;
-        
-        if (searchTerm === '') {
-            products.forEach(product => {
-                product.style.display = 'flex';
-                product.closest('.category').style.display = 'block';
-            });
-            noResults.style.display = 'none';
-            return;
-        }
-        
+let searchTimer;
+function performSearch() {
+    const searchTerm = searchInput.value.trim().toLowerCase();
+    const products = document.querySelectorAll('.product');
+    let hasResults = false;
+    if (searchTerm === '') {
         products.forEach(product => {
-            const productName = product.querySelector('h3').textContent.toLowerCase();
-            const productDesc = product.querySelector('p').textContent.toLowerCase();
-            const productType = product.dataset.type?.toLowerCase() || '';
-            
-            if (productName.includes(searchTerm) || 
-                productDesc.includes(searchTerm) || 
-                productType.includes(searchTerm)) {
-                product.style.display = 'flex';
-                product.closest('.category').style.display = 'block';
-                hasResults = true;
-            } else {
-                product.style.display = 'none';
-            }
+            product.style.display = 'flex';
+            product.closest('.category').style.display = 'block';
         });
-        
-        // التحقق مما إذا كان هناك نتائج
-        const visibleCategories = document.querySelectorAll('.category:not([style*="display: none"])');
-        visibleCategories.forEach(category => {
-            const visibleProducts = category.querySelectorAll('.product:not([style*="display: none"])');
-            if (visibleProducts.length === 0) {
-                category.style.display = 'none';
-            }
-        });
-        
-        noResults.style.display = hasResults ? 'none' : 'block';
+        noResults.style.display = 'none';
+        return;
     }
-
-    // أحداث البحث
-    searchBtn.addEventListener('click', performSearch);
-    searchInput.addEventListener('input', () => {
-        clearTimeout(searchTimer);
-        searchTimer = setTimeout(performSearch, 300);
+    products.forEach(product => {
+        const name = product.querySelector('h3').textContent.toLowerCase();
+        const desc = product.querySelector('p').textContent.toLowerCase();
+        const type = product.dataset.type?.toLowerCase() || '';
+        if (name.includes(searchTerm) || desc.includes(searchTerm) || type.includes(searchTerm)) {
+            product.style.display = 'flex';
+            product.closest('.category').style.display = 'block';
+            hasResults = true;
+        } else {
+            product.style.display = 'none';
+        }
     });
-
-    // وظائف مساعدة
-    function escapeHtml(unsafe) {
-        if (!unsafe) return '';
-        return unsafe.toString()
-            .replace(/&/g, "&amp;")
-            .replace(/</g, "&lt;")
-            .replace(/>/g, "&gt;")
-            .replace(/"/g, "&quot;")
-            .replace(/'/g, "&#039;");
-    }
-
-    function formatNumber(num) {
-        return parseFloat(num).toLocaleString('ar-EG');
-    }
-
-    // دالة لتحويل الأرقام العربية إلى لاتينية
+    const visibleCategories = document.querySelectorAll('.category');
+    visibleCategories.forEach(category => {
+        const visibleProducts = category.querySelectorAll('.product:not([style*="display: none"])');
+        category.style.display = visibleProducts.length === 0 ? 'none' : 'block';
+    });
+    noResults.style.display = hasResults ? 'none' : 'block';
+}
+searchBtn.addEventListener('click', performSearch);
+searchInput.addEventListener('input', () => {
+    clearTimeout(searchTimer);
+    searchTimer = setTimeout(performSearch, 300);
+});
+function escapeHtml(unsafe) {
+    return unsafe ? unsafe.toString().replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#039;") : '';
+}
+function formatNumber(num) {
+    return parseFloat(num).toLocaleString('ar-EG');
+}
 function toLatinNumbers(str) {
     const arabicNumbers = ['٠','١','٢','٣','٤','٥','٦','٧','٨','٩'];
     const latinNumbers  = ['0','1','2','3','4','5','6','7','8','9'];
@@ -1583,12 +1428,6 @@ function toLatinNumbers(str) {
     });
     return result;
 }
-
 </script>
-
-<style>
-
-</style>
-
 </body>
 </html>
