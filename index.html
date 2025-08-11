@@ -1428,7 +1428,7 @@
                 const productDesc = product.querySelector('p').textContent.toLowerCase();
                 const productType = product.dataset.type.toLowerCase();
                 
-                if (productName.includes(searchTerm) {
+if (productName.includes(searchTerm)) {
                     product.style.display = 'flex';
                     product.closest('.category').style.display = 'block';
                     hasResults = true;
