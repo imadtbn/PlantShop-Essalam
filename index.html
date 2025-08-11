@@ -1401,38 +1401,78 @@
         }
     }
 
-    // عرض اختيار الأصناف
-    function showVarietySelection(productName, btnElement) {
-        const productCard = btnElement.closest('.product');
-        const varieties = productCard.querySelectorAll('.varieties li');
-        
-        if (varieties.length === 0) {
-            const price = productCard.dataset.price || '0';
-            addToCart(productName, '', price);
-            return;
-        }
-        
-        let options = '';
-        varieties.forEach(li => {
-            const text = li.textContent.trim();
-            const priceMatch = text.match(/(\d+)\s*دج/);
-            const price = priceMatch ? priceMatch[1] : '0';
-            const variety = text.replace(/\s*-\s*\d+\s*دج/, '').trim();
-            options += `<option value="${price}|${variety}">${text}</option>`;
-        });
-        
-        const selected = prompt(`اختر صنف من ${productName}:\n\n${Array.from(varieties).map(li => li.textContent).join('\n')}`);
-        if (selected) {
-            const selectedOption = Array.from(varieties).find(li => li.textContent.includes(selected));
-            if (selectedOption) {
-                const text = selectedOption.textContent.trim();
-                const priceMatch = text.match(/(\d+)\s*دج/);
-                const price = priceMatch ? priceMatch[1] : '0';
-                const variety = text.replace(/\s*-\s*\d+\s*دج/, '').trim();
-                addToCart(productName, variety, price);
-            }
-        }
+   // عرض اختيار الأصناف
+function showVarietySelection(productName, btnElement) {
+    const productCard = btnElement.closest('.product');
+    const varieties = productCard.querySelectorAll('.varieties li');
+    const productType = productCard.dataset.type || '';
+
+    // إذا لم يكن هناك أصناف، أضف المنتج مباشرة
+    if (varieties.length === 0) {
+        const price = productCard.dataset.price || '0';
+        addToCart(productName, '', price, 1, productType);
+        return;
     }
+
+    // إنشاء نافذة المودال
+    let modal = document.createElement('div');
+    modal.style.position = 'fixed';
+    modal.style.top = '0';
+    modal.style.left = '0';
+    modal.style.width = '100%';
+    modal.style.height = '100%';
+    modal.style.background = 'rgba(0,0,0,0.5)';
+    modal.style.display = 'flex';
+    modal.style.alignItems = 'center';
+    modal.style.justifyContent = 'center';
+    modal.style.zIndex = '9999';
+
+    let box = document.createElement('div');
+    box.style.background = '#fff';
+    box.style.padding = '20px';
+    box.style.borderRadius = '8px';
+    box.style.minWidth = '250px';
+
+    let label = document.createElement('label');
+    label.textContent = 'اختر الصنف:';
+    box.appendChild(label);
+
+    // قائمة الأصناف
+    let select = document.createElement('select');
+    select.style.display = 'block';
+    select.style.margin = '10px 0';
+    varieties.forEach(li => {
+        let opt = document.createElement('option');
+        opt.textContent = li.textContent.trim();
+        select.appendChild(opt);
+    });
+    box.appendChild(select);
+
+    // زر التأكيد
+    let confirmBtn = document.createElement('button');
+    confirmBtn.textContent = 'تأكيد';
+    confirmBtn.className = 'btn primary';
+    confirmBtn.onclick = () => {
+        const selectedText = select.value;
+        const priceMatch = selectedText.match(/(\d+)\s*دج/);
+        const price = priceMatch ? priceMatch[1] : '0';
+        const variety = selectedText.replace(/\s*-\s*\d+\s*دج/, '').trim();
+        addToCart(productName, variety, price, 1, productType);
+        document.body.removeChild(modal);
+    };
+    box.appendChild(confirmBtn);
+
+    // زر الإلغاء
+    let cancelBtn = document.createElement('button');
+    cancelBtn.textContent = 'إلغاء';
+    cancelBtn.className = 'btn secondary';
+    cancelBtn.style.marginRight = '10px';
+    cancelBtn.onclick = () => document.body.removeChild(modal);
+    box.appendChild(cancelBtn);
+
+    modal.appendChild(box);
+    document.body.appendChild(modal);
+}
 
     // وظيفة البحث المحسنة
     let searchTimer;
