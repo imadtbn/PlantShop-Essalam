@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <title>متجر مشتلة السلام</title>
+  <style>
+    body {font-family:'Tajawal', Arial, sans-serif; background:#f5f6f4; padding:20px;}
+    h2 {text-align:center; margin-bottom:20px;}
+    #productsList {display:grid; grid-template-columns:repeat(auto-fill, minmax(220px,1fr)); gap:15px;}
+    .product-card {background:#fff; border-radius:12px; padding:15px; box-shadow:0 2px 6px rgba(0,0,0,.1); text-align:center;}
+    .product-card img {max-width:100%; border-radius:8px;}
+    .product-card h3 {margin:10px 0 5px;}
+    .product-card p {margin:4px 0; color:#555;}
+    .price {color:#2e7d32; font-weight:bold;}
+  </style>
+</head>
+<body>
+
+  <h2>🌱 منتجات مشتلة السلام</h2>
+  <div id="productsList">جاري تحميل المنتجات...</div>
+
+  <script>
+    const apiUrl = "ضع_هنا_نفس_رابط_الـ_API"; // نفس رابط Google Apps Script
+
+    fetch(apiUrl)
+      .then(res => res.json())
+      .then(products => {
+        const container = document.getElementById("productsList");
+        container.innerHTML = "";
+        products.forEach(p => {
+          const card = `
+            <div class="product-card">
+              <img src="${p.image || 'https://via.placeholder.com/200'}" alt="${p.name}">
+              <h3>${p.name}</h3>
+              <p>${p.description || ''}</p>
+              <p class="price">${p.price} دج</p>
+              <p>الكمية: ${p.quantity}</p>
+            </div>
+          `;
+          container.innerHTML += card;
+        });
+      })
+      .catch(() => {
+        document.getElementById("productsList").innerText = "تعذر تحميل المنتجات.";
+      });
+  </script>
+</body>
+</html>
