@@ -1234,44 +1234,68 @@
         </div>
     </div>
 
-    <!-- الفوتر -->
-    <footer>
-        <div class="footer-inner">
-            <div class="footer-col">
-                <h4>مشتلة السلام</h4>
-                <p style="margin:6px 0 0 0; color:#dfeede;">أجود أنواع الشتلات والخدمات الزراعية — بيع وتوصيل واستشارات
-                    زراعية.</p>
-            </div>
+ <!-- الفوتر -->
+<footer style="background:#2e7d32; color:#fff; padding:30px 15px 15px; font-family:'Tajawal',Arial,sans-serif;">
+  <div class="footer-inner" style="display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:25px; max-width:1200px; margin:auto;">
 
-            <div class="footer-col">
-                <h4>اتصل بنا</h4>
-                <div class="footer-links">
-                    <a href="tel:0559219855"><i class="fas fa-phone"></i> 0559 219 855</a>
-                    <a href="tel:0799686060"><i class="fas fa-phone"></i> 0799 686 060</a>
-                    <a href="mailto:info@nabatati.com"><i class="fas fa-envelope"></i> info@nabatati.com</a>
-                </div>
-            </div>
+    <!-- عن المشتلة -->
+    <div class="footer-col">
+      <h4 style="margin-bottom:10px;">مشتلة السلام</h4>
+      <p style="margin:6px 0 0 0; color:#dfeede;">
+        أجود أنواع الشتلات والخدمات الزراعية — بيع وتوصيل واستشارات زراعية.
+      </p>
+    </div>
 
-            <div class="footer-col">
-                <h4>موقعنا</h4>
-                <p style="margin:6px 0 0 0;"><i class="fas fa-map-marker-alt"></i> الطريق الوطني رقم 24، سيباو - بغلية،
-                    ولاية بومرداس</p>
-                <a href="https://maps.app.goo.gl/vwdRQ8Jun1TDyk627" target="_blank"
-                    style="color:#d7f0d7; display:inline-block; margin-top:8px;"><i class="fas fa-map-marked-alt"></i>
-                    التوجّه إلى المشتلة</a>
-            </div>
-        </div>
+    <!-- الاتصال -->
+    <div class="footer-col">
+      <h4 style="margin-bottom:10px;">اتصل بنا</h4>
+      <div class="footer-links" style="display:flex; flex-direction:column; gap:6px;">
+        <a href="tel:0559219855" style="color:#dfeede; text-decoration:none;"><i class="fas fa-phone"></i> 0559 219 855</a>
+        <a href="tel:0799686060" style="color:#dfeede; text-decoration:none;"><i class="fas fa-phone"></i> 0799 686 060</a>
+        <a href="mailto:info@nabatati.com" style="color:#dfeede; text-decoration:none;"><i class="fas fa-envelope"></i> info@nabatati.com</a>
+      </div>
+    </div>
 
-        <div class="footer-bottom">جميع الحقوق محفوظة &copy; <span id="year"></span> مشتلة السلام</div>
-    </footer>
+    <!-- الموقع -->
+    <div class="footer-col">
+      <h4 style="margin-bottom:10px;">موقعنا</h4>
+      <p style="margin:6px 0 0 0; color:#dfeede;">
+        <i class="fas fa-map-marker-alt"></i> الطريق الوطني رقم 24، سيباو - بغلية، ولاية بومرداس
+      </p>
+      <a href="https://maps.app.goo.gl/vwdRQ8Jun1TDyk627" target="_blank"
+         style="color:#d7f0d7; display:inline-block; margin-top:8px; text-decoration:none;">
+         <i class="fas fa-map-marked-alt"></i> التوجّه إلى المشتلة
+      </a>
+    </div>
 
-    <!-- ======================
-       JavaScript: منطق السلة، الفاتورة، الإرسال
-       ====================== -->
+    <!-- التواصل الاجتماعي -->
+    <div class="footer-col">
+      <h4 style="margin-bottom:10px;">تابعنا</h4>
+      <div style="display:flex; gap:12px; margin-top:8px;">
+        <a href="https://facebook.com" target="_blank" style="color:#fff; font-size:20px;"><i class="fab fa-facebook"></i></a>
+        <a href="https://instagram.com" target="_blank" style="color:#fff; font-size:20px;"><i class="fab fa-instagram"></i></a>
+        <a href="https://wa.me/213559219855" target="_blank" style="color:#fff; font-size:20px;"><i class="fab fa-whatsapp"></i></a>
+        <a href="https://youtube.com" target="_blank" style="color:#fff; font-size:20px;"><i class="fab fa-youtube"></i></a>
+        <a href="https://tiktok.com" target="_blank" style="color:#fff; font-size:20px;"><i class="fab fa-tiktok"></i></a>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- أسفل الفوتر -->
+  <div class="footer-bottom" style="text-align:center; margin-top:25px; border-top:1px solid rgba(255,255,255,0.2); padding-top:10px; font-size:14px;">
+    جميع الحقوق محفوظة &copy; <span id="year"></span> مشتلة السلام
+  </div>
+</footer>
+
+<!-- تحديث السنة تلقائياً -->
+<script>
+  document.getElementById("year").textContent = new Date().getFullYear();
+</script>
+
+    <!-- =================JavaScript: منطق السلة، الفاتورة، الإرسال ================ -->
        <script>
-      /*****************************************************************
- * إعدادات مهمة:
- *****************************************************************/
+      /**************************** * إعدادات مهمة: ******************************/
 const GOOGLE_SHEETS_WEBAPP_URL = 'https://script.google.com/macros/s/AKfycbzWcIHQLakofoTSQCs8u_NnXyTGUsgrr1srxe0e84GSZT6v4kDep13S4-VoAO73FNdp/exec';
 const ENABLE_PERSIST_CART = true; 
 
