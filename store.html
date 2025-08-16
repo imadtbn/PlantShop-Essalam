@@ -2,16 +2,65 @@
 <html lang="ar" dir="rtl">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- مهم للموبايل -->
   <title>متجر مشتلة السلام</title>
   <style>
-    body {font-family:'Tajawal', Arial, sans-serif; background:#f5f6f4; padding:20px;}
-    h2 {text-align:center; margin-bottom:20px;}
-    #productsList {display:grid; grid-template-columns:repeat(auto-fill, minmax(220px,1fr)); gap:15px;}
-    .product-card {background:#fff; border-radius:12px; padding:15px; box-shadow:0 2px 6px rgba(0,0,0,.1); text-align:center;}
-    .product-card img {max-width:100%; border-radius:8px;}
-    .product-card h3 {margin:10px 0 5px;}
-    .product-card p {margin:4px 0; color:#555;}
-    .price {color:#2e7d32; font-weight:bold;}
+    body {
+      font-family:'Tajawal', Arial, sans-serif;
+      background:#f5f6f4;
+      padding:15px;
+      margin:0;
+    }
+    h2 {
+      text-align:center;
+      margin:15px 0 20px;
+      font-size:1.6rem;
+    }
+    #productsList {
+      display:grid;
+      grid-template-columns:repeat(auto-fill, minmax(220px,1fr));
+      gap:15px;
+    }
+    .product-card {
+      background:#fff;
+      border-radius:12px;
+      padding:12px;
+      box-shadow:0 2px 6px rgba(0,0,0,.1);
+      text-align:center;
+      transition:transform .2s;
+    }
+    .product-card:hover {
+      transform:translateY(-4px);
+    }
+    .product-card img {
+      max-width:100%;
+      height:auto;
+      border-radius:8px;
+    }
+    .product-card h3 {
+      margin:10px 0 5px;
+      font-size:1.2rem;
+    }
+    .product-card p {
+      margin:4px 0;
+      color:#555;
+      font-size:.95rem;
+    }
+    .price {
+      color:#2e7d32;
+      font-weight:bold;
+      font-size:1.05rem;
+    }
+
+    /* ✅ تحسين التصفح على الهاتف */
+    @media (max-width:600px) {
+      body {padding:10px;}
+      h2 {font-size:1.3rem;}
+      #productsList {grid-template-columns:1fr;} /* بطاقة وحدة في السطر */
+      .product-card {padding:10px;}
+      .product-card h3 {font-size:1.05rem;}
+      .product-card p {font-size:.9rem;}
+    }
   </style>
 </head>
 <body>
@@ -20,7 +69,7 @@
   <div id="productsList">جاري تحميل المنتجات...</div>
 
   <script>
-    const apiUrl = "ضع_هنا_نفس_رابط_الـ_API"; // نفس رابط Google Apps Script
+    const apiUrl = "ضع_هنا_رابط_الـ_API"; // رابط Google Apps Script
 
     fetch(apiUrl)
       .then(res => res.json())
