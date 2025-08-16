@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <title>لوحة التحكم - مشتلة السلام</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    body {font-family:'Tajawal', Arial, sans-serif; background:#f5f6f4; padding:20px;}
+    .form-container {background:#fff; padding:20px; border-radius:12px; box-shadow:0 2px 6px rgba(0,0,0,.1); max-width:700px; margin:auto;}
+    .form-header {display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;}
+    .form-row {display:flex; gap:15px;}
+    .form-group {flex:1; display:flex; flex-direction:column; margin-bottom:10px;}
+    label {margin-bottom:6px; font-weight:bold;}
+    input, select, textarea {padding:10px; border:1px solid #ccc; border-radius:8px;}
+    .form-actions {text-align:center; margin-top:15px;}
+    .btn-save {background:#2e7d32; color:#fff; padding:10px 20px; border:none; border-radius:8px; cursor:pointer;}
+    .btn-save i {margin-left:6px;}
+  </style>
+</head>
+<body>
+
+  <div class="form-container">
+    <div class="form-header">
+      <h3>إضافة منتج جديد</h3>
+      <i class="fas fa-plus-circle fa-2x" style="color:#2e7d32;"></i>
+    </div>
+
+    <form id="productForm">
+      <div class="form-row">
+        <div class="form-group">
+          <label for="productName">اسم المنتج</label>
+          <input type="text" id="productName" required>
+        </div>
+        <div class="form-group">
+          <label for="productCategory">التصنيف</label>
+          <select id="productCategory" required>
+            <option value="">اختر</option>
+            <option value="fruit-trees">الأشجار المثمرة</option>
+            <option value="flowers">الورود والزهور</option>
+            <option value="ornamental">أشجار التزيين</option>
+            <option value="vegetables">بذور وخضروات</option>
+            <option value="tools">أدوات وأسمدة</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="productPrice">السعر (دج)</label>
+          <input type="number" id="productPrice" min="0" required>
+        </div>
+        <div class="form-group">
+          <label for="productImage">رابط الصورة</label>
+          <input type="url" id="productImage">
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="productQuantity">الكمية</label>
+          <input type="number" id="productQuantity" min="1" required>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="productDescription">الوصف</label>
+        <textarea id="productDescription" rows="3"></textarea>
+      </div>
+
+      <div class="form-actions">
+        <button type="submit" class="btn-save"><i class="fas fa-save"></i> حفظ المنتج</button>
+      </div>
+    </form>
+  </div>
+
+  <script>
+    const scriptUrl = "ضع_هنا_رابط_الـ_API"; // ضع رابط Google Apps Script
+
+    document.getElementById("productForm").addEventListener("submit", function(e){
+      e.preventDefault();
+
+      const data = {
+        name: document.getElementById("productName").value,
+        category: document.getElementById("productCategory").value,
+        price: document.getElementById("productPrice").value,
+        image: document.getElementById("productImage").value,
+        description: document.getElementById("productDescription").value,
+        quantity: document.getElementById("productQuantity").value
+      };
+
+      fetch(scriptUrl, {
+        method: "POST",
+        body: JSON.stringify(data)
+      })
+      .then(res => res.text())
+      .then(msg => {
+        alert(msg);
+        document.getElementById("productForm").reset();
+      })
+      .catch(err => alert("خطأ: " + err));
+    });
+  </script>
+</body>
+</html>
