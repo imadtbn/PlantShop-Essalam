@@ -68,30 +68,27 @@
   <h2>🌱 منتجات مشتلة السلام</h2>
   <div id="productsList">جاري تحميل المنتجات...</div>
 
-  <script>
-    const apiUrl = "ضع_هنا_رابط_الـ_API"; // رابط Google Apps Script
+<script>
+  const apiUrl = "https://script.google.com/macros/s/AKfycbyI961zpO8JB-bAPj8X0-EF-yhiLMqm1BwrhfvcyLlJueH3e3d8_nA60-zagdtY0ChBpg/exec";
 
-    fetch(apiUrl)
-      .then(res => res.json())
-      .then(products => {
-        const container = document.getElementById("productsList");
-        container.innerHTML = "";
-        products.forEach(p => {
-          const card = `
-            <div class="product-card">
-              <img src="${p.image || 'https://via.placeholder.com/200'}" alt="${p.name}">
-              <h3>${p.name}</h3>
-              <p>${p.description || ''}</p>
-              <p class="price">${p.price} دج</p>
-              <p>الكمية: ${p.quantity}</p>
-            </div>
-          `;
-          container.innerHTML += card;
-        });
-      })
-      .catch(() => {
-        document.getElementById("productsList").innerText = "تعذر تحميل المنتجات.";
+  fetch(apiUrl)
+    .then(res => res.json())
+    .then(products => {
+      const container = document.getElementById("productsList");
+      products.forEach(p => {
+        const card = `
+          <div class="product-card">
+            <img src="${p.image}" alt="${p.name}">
+            <h3>${p.name}</h3>
+            <p>${p.description}</p>
+            <p><strong>${p.price} دج</strong></p>
+            <p>الكمية: ${p.quantity}</p>
+          </div>
+        `;
+        container.innerHTML += card;
       });
-  </script>
+    });
+</script>
+
 </body>
 </html>
