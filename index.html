@@ -781,47 +781,14 @@
     <!-- ======================
        المحتوى: الأقسام والمنتجات
        ====================== -->
-   <main class="container">
-    <!-- رسالة عدم وجود نتائج -->
+  <main class="container">
     <div class="no-results" id="noResults">
         <i class="fas fa-search" style="font-size: 24px; margin-bottom: 10px;"></i>
         <p>لم يتم العثور على نتائج مطابقة للبحث</p>
     </div>
 
-    <!-- مكان ظهور المنتجات بعد البحث -->
-    <div id="productsList" class="products"></div>
-
-    <!-- قسم الأشجار المثمرة (يتضمن الزيتون بأصنافه) -->
-    <section id="fruit-trees" class="category" aria-labelledby="h-fruit-trees">
-        <div class="category-header">
-            <h2 id="h-fruit-trees"><i class="fas fa-apple-whole" aria-hidden="true"></i> الأشجار المثمرة</h2>
-        </div>
-
-        <div class="products">
-            <!-- المنتج 1: زيتون لإنتاج الزيت -->
-            <div class="product" data-price="60" data-type="زيتون">
-                <img src="https://raw.githubusercontent.com/imadtbn/PlantShop-Essalam/refs/heads/main/images/zite.jpg"
-                    alt="زيتون لإنتاج الزيت">
-                <div class="product-info">
-                    <h3>زيتون لإنتاج الزيت</h3>
-                    <p>صنف ممتاز لإنتاج الزيوت</p>
-                    <div class="varieties">
-                        <strong>الأصناف المتاحة:</strong>
-                        <ul>
-                            <li>شملال - 60 دج</li>
-                            <li>سيقواز - 65 دج</li>
-                            <li>بيكوال - 70 دج</li>
-                            <li>ملكة العرب - 75 دج</li>
-                        </ul>
-                    </div>
-                    
-                    <button class="cart-btn" onclick="showVarietySelection('زيتون لإنتاج الزيت', this)">
-                        <i class="fas fa-cart-plus"></i> أضف للسلة
-                    </button>
-                </div>
-            </div>
-        </div>
-    </section>
+    <!-- هنا تعرض المنتجات القادمة من Google Sheets -->
+    <div id="productsList"></div>
 </main>
 
 
@@ -1351,32 +1318,35 @@
             });
             return result;
         }
-<div id="productsList"></div>
+
+        async function fetchProducts() {
         const sheetURL = "https://docs.google.com/spreadsheets/d/1tspCF_YxlBA8gfvj-aWGP2opGzejb0Iop-lT3YXr4J8/tq?tqx=out:json&sheet=Products";
+  const response = await fetch(url);
+  const products = await response.json();
 
-fetch(sheetURL)
-  .then(res => res.text())
-  .then(data => {
-    const json = JSON.parse(data.substr(47).slice(0, -2));
-    const rows = json.table.rows;
+  const container = document.getElementById("productsList");
+  container.innerHTML = "";
 
-    let html = "";
-    rows.forEach(row => {
-      const name = row.c[0]?.v || "";
-      const price = row.c[1]?.v || "";
-      const img = row.c[2]?.v || "";
-
-      html += `
-        <div class="product-card">
-          <img src="${img}" alt="${name}">
-          <h3>${name}</h3>
-          <p>${price} دج</p>
-        </div>
-      `;
-    });
-
-    document.getElementById("productsList").innerHTML = html;
+  products.forEach(p => {
+    const productDiv = document.createElement("div");
+    productDiv.className = "product";
+    productDiv.innerHTML = `
+      <img src="${p.image}" alt="${p.name}">
+      <div class="product-info">
+        <h3>${p.name}</h3>
+        <p>${p.description}</p>
+        <button class="cart-btn" onclick="addToCart('${p.name}', ${p.price})">
+          <i class="fas fa-cart-plus"></i> أضف للسلة
+        </button>
+      </div>
+    `;
+    container.appendChild(productDiv);
   });
+}
+
+// تحميل المنتجات عند فتح الصفحة
+fetchProducts();
+
     </script>
 </body>
 </html>
