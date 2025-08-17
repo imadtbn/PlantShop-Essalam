@@ -105,64 +105,33 @@
   </div>
 
 <script>
-  // كلمة المرور غير مشفرة
-  const PASSWORD = "admin123";
+  const scriptUrl = "https://script.google.com/macros/s/AKfycbyI961zpO8JB-bAPj8X0-EF-yhiLMqm1BwrhfvcyLlJueH3e3d8_nA60-zagdtY0ChBpg/exec";
 
-  // رابط السكربت
-  const SCRIPT_URL = "PUT_YOUR_WEBAPP_URL_HERE";
+  document.getElementById("productForm").addEventListener("submit", function(e){
+    e.preventDefault();
 
-  function login() {
-    const input = document.getElementById("password").value;
-    if (input === PASSWORD) {
-      document.getElementById("loginBox").style.display = "none";
-      document.getElementById("dashboard").style.display = "block";
-      loadProducts();
-    } else {
-      document.getElementById("loginMsg").innerText = "كلمة المرور غير صحيحة!";
-    }
-  }
+    const data = {
+      name: document.getElementById("productName").value,
+      category: document.getElementById("productCategory").value,
+      price: document.getElementById("productPrice").value,
+      image: document.getElementById("productImage").value,
+      description: document.getElementById("productDescription").value,
+      quantity: document.getElementById("productQuantity").value
+    };
 
-  function addProduct() {
-    const name = document.getElementById("name").value;
-    const price = document.getElementById("price").value;
-    const image = document.getElementById("image").value;
-    const desc = document.getElementById("desc").value;
-
-    if (!name || !price) {
-      alert("الرجاء إدخال الاسم والسعر");
-      return;
-    }
-
-    fetch(SCRIPT_URL, {
+    fetch(scriptUrl, {
       method: "POST",
-      body: JSON.stringify({ action:"add", name, price, image, desc })
+      body: JSON.stringify(data)
     })
     .then(res => res.text())
-    .then(() => {
-      alert("تمت إضافة المنتج بنجاح");
-      loadProducts();
-    });
-  }
-
-  function loadProducts() {
-    fetch(SCRIPT_URL + "?action=get")
-      .then(res => res.json())
-      .then(data => {
-        const table = document.getElementById("productsTable");
-        table.innerHTML = "";
-        data.forEach(row => {
-          const tr = document.createElement("tr");
-          tr.innerHTML = `
-            <td data-label="الاسم">${row[0]}</td>
-            <td data-label="السعر">${row[1]}</td>
-            <td data-label="الصورة"><img src="${row[2]}" alt="" style="max-width:60px"></td>
-            <td data-label="الوصف">${row[3]}</td>
-          `;
-          table.appendChild(tr);
-        });
-      });
-  }
+    .then(msg => {
+      alert(msg);
+      document.getElementById("productForm").reset();
+    })
+    .catch(err => alert("خطأ: " + err));
+  });
 </script>
+
 
 </body>
 </html>
