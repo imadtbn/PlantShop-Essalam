@@ -1319,33 +1319,34 @@
             return result;
         }
 
-        async function fetchProducts() {
-        const sheetURL = "https://docs.google.com/spreadsheets/d/1tspCF_YxlBA8gfvj-aWGP2opGzejb0Iop-lT3YXr4J8/tq?tqx=out:json&sheet=Products";
-  const response = await fetch(url);
-  const products = await response.json();
 
-  const container = document.getElementById("productsList");
-  container.innerHTML = "";
+async function loadProducts() {
+        const sheetURL = "https://docs.google.com/spreadsheets/d/1pMcA0mEXkx5HMF8IfHZ9j372kRjxDXv-tWiPsJUXTAA/tq?tqx=out:json&sheet=Products";
+  const res = await fetch(url);
+  const products = await res.json();
+
+  const list = document.getElementById("productsList");
+  list.innerHTML = ""; // تفريغ القائمة قبل تعبئتها
 
   products.forEach(p => {
-    const productDiv = document.createElement("div");
-    productDiv.className = "product";
-    productDiv.innerHTML = `
-      <img src="${p.image}" alt="${p.name}">
-      <div class="product-info">
-        <h3>${p.name}</h3>
-        <p>${p.description}</p>
-        <button class="cart-btn" onclick="addToCart('${p.name}', ${p.price})">
-          <i class="fas fa-cart-plus"></i> أضف للسلة
-        </button>
+    const card = `
+      <div class="product" data-price="${p.price}" data-type="${p.category}">
+        <img src="${p.image}" alt="${p.name}">
+        <div class="product-info">
+          <h3>${p.name}</h3>
+          <p>${p.description}</p>
+          <button class="cart-btn" onclick="addToCart('${p.name}', ${p.price})">
+            <i class="fas fa-cart-plus"></i> أضف للسلة
+          </button>
+        </div>
       </div>
     `;
-    container.appendChild(productDiv);
+    list.innerHTML += card;
   });
 }
 
-// تحميل المنتجات عند فتح الصفحة
-fetchProducts();
+document.addEventListener("DOMContentLoaded", loadProducts);
+
 
     </script>
 </body>
