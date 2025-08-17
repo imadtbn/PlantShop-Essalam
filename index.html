@@ -1320,34 +1320,57 @@
         }
 
 
+
 async function loadProducts() {
-        const sheetURL = "https://docs.google.com/spreadsheets/d/1pMcA0mEXkx5HMF8IfHZ9j372kRjxDXv-tWiPsJUXTAA/tq?tqx=out:json&sheet=Products";
-  const res = await fetch(url);
-  const products = await res.json();
+    const sheetURL = "https://docs.google.com/spreadsheets/d/1pMcA0mEXkx5HMF8IfHZ9j372kRjxDXv-tWiPsJUXTAA/tq?tqx=out:json&sheet=Products";
+    try {
+        const res = await fetch(sheetURL);
+        const text = await res.text();
 
-  const list = document.getElementById("productsList");
-  list.innerHTML = ""; // تفريغ القائمة قبل تعبئتها
+        // قص النص حتى يبقى JSON صالح
+        const json = JSON.parse(text.substr(47).slice(0, -2));
+        const rows = json.table.rows;
 
-  products.forEach(p => {
-    const card = `
-      <div class="product" data-price="${p.price}" data-type="${p.category}">
-        <img src="${p.image}" alt="${p.name}">
-        <div class="product-info">
-          <h3>${p.name}</h3>
-          <p>${p.description}</p>
-          <button class="cart-btn" onclick="addToCart('${p.name}', ${p.price})">
-            <i class="fas fa-cart-plus"></i> أضف للسلة
-          </button>
-        </div>
-      </div>
-    `;
-    list.innerHTML += card;
-  });
+        const list = document.getElementById("productsList");
+        list.innerHTML = ""; // تفريغ القائمة
+
+        rows.forEach(row => {
+            const name = row.c[0]?.v || "";
+            const description = row.c[1]?.v || "";
+            const price = row.c[2]?.v || 0;
+            const image = row.c[3]?.v || "placeholder.jpg";
+            const category = row.c[4]?.v || "";
+
+            const card = `
+              <div class="product" data-price="${price}" data-type="${category}">
+                <img src="${image}" alt="${name}">
+                <div class="product-info">
+                  <h3>${name}</h3>
+                  <p>${description}</p>
+                  <button class="cart-btn" onclick="addToCart('${name}', '', ${price}, 1, '${category}')">
+                    <i class="fas fa-cart-plus"></i> أضف للسلة
+                  </button>
+                </div>
+              </div>
+            `;
+            list.innerHTML += card;
+        });
+
+    } catch (e) {
+        console.error("خطأ في تحميل المنتجات:", e);
+    }
 }
 
+// تحميل المنتجات عند فتح الصفحة
 document.addEventListener("DOMContentLoaded", loadProducts);
 
+// تحديث المنتجات تلقائياً كل 60 ثانية
+setInterval(loadProducts, 60000);
+</script>
 
+
+  // تحديث المنتجات تلقائيا كل 60 ثانية
+  setInterval(loadProducts, 60000);
     </script>
 </body>
 </html>
