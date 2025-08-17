@@ -1322,55 +1322,48 @@
 
 
 async function loadProducts() {
-    const sheetURL = "https://docs.google.com/spreadsheets/d/1pMcA0mEXkx5HMF8IfHZ9j372kRjxDXv-tWiPsJUXTAA/tq?tqx=out:json&sheet=Products";
-    try {
-        const res = await fetch(sheetURL);
-        const text = await res.text();
 
-        // قص النص حتى يبقى JSON صالح
-        const json = JSON.parse(text.substr(47).slice(0, -2));
-        const rows = json.table.rows;
+const PRODUCTS_API = "https://script.google.com/macros/s/AKfycbyA7w8_jrXyTHkM5PB5AmHWxVwBVa1qhF91pP74fBYrz6G_cNKFHEHoi-y66iODOE0i8A/exec"; // ضع رابط الويب آب
 
-        const list = document.getElementById("productsList");
-        list.innerHTML = ""; // تفريغ القائمة
+async function loadProducts() {
+  try {
+    const res = await fetch(PRODUCTS_API, { cache: "no-store" });
+    if (!res.ok) throw new Error("HTTP " + res.status);
+    const payload = await res.json();
+    if (!payload.ok) throw new Error(payload.error || "API error");
 
-        rows.forEach(row => {
-            const name = row.c[0]?.v || "";
-            const description = row.c[1]?.v || "";
-            const price = row.c[2]?.v || 0;
-            const image = row.c[3]?.v || "placeholder.jpg";
-            const category = row.c[4]?.v || "";
+    const products = payload.data || [];
+    const list = document.getElementById("productsList");
+    list.innerHTML = "";
 
-            const card = `
-              <div class="product" data-price="${price}" data-type="${category}">
-                <img src="${image}" alt="${name}">
-                <div class="product-info">
-                  <h3>${name}</h3>
-                  <p>${description}</p>
-                  <button class="cart-btn" onclick="addToCart('${name}', '', ${price}, 1, '${category}')">
-                    <i class="fas fa-cart-plus"></i> أضف للسلة
-                  </button>
-                </div>
-              </div>
-            `;
-            list.innerHTML += card;
-        });
-
-    } catch (e) {
-        console.error("خطأ في تحميل المنتجات:", e);
+    products.forEach(p => {
+      const card = `
+        <div class="product" data-price="${p.price}" data-type="${p.category}">
+          <img src="${p.image || 'https://via.placeholder.com/600x400?text=%D9%85%D9%88%D8%AC%D9%88%D8%AF+%D9%82%D8%B1%D9%8A%D8%A8%D8%A7'}" alt="${p.name}">
+          <div class="product-info">
+            <h3>${p.name}</h3>
+            <p>${p.description || ""}</p>
+            <p class="price">${p.price ? toLatinNumbers(formatNumber(p.price)) + ' دج' : ''}</p>
+            <button class="cart-btn" onclick="addToCart('${p.name.replace(/'/g,"\\'")}', '', ${Number(p.price)||0}, 1, '${(p.category||'').replace(/'/g,"\\'")}')">
+              <i class="fas fa-cart-plus"></i> أضف للسلة
+            </button>
+          </div>
+        </div>`;
+      list.insertAdjacentHTML('beforeend', card);
+    });
+  } catch (err) {
+    console.error("خطأ في تحميل المنتجات:", err);
+    // رسالة بسيطة للمستخدم
+    const list = document.getElementById("productsList");
+    if (list && !list.childElementCount) {
+      list.innerHTML = `<div class="no-results" style="display:block">تعذّر جلب المنتجات. رجاءً أعد المحاولة لاحقًا.</div>`;
     }
+  }
 }
 
-// تحميل المنتجات عند فتح الصفحة
+// عند فتح الصفحة + تحديث تلقائي كل دقيقة
 document.addEventListener("DOMContentLoaded", loadProducts);
-
-// تحديث المنتجات تلقائياً كل 60 ثانية
 setInterval(loadProducts, 60000);
-</script>
-
-
-  // تحديث المنتجات تلقائيا كل 60 ثانية
-  setInterval(loadProducts, 60000);
     </script>
 </body>
 </html>
